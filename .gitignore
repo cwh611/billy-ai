@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+*.log
+billy-ai-venv-py311/
+.env
+.venv/
+env/
+venv/
+
+# Node/Web
+node_modules/
+dist/
+build/
+
+# macOS system files
+.DS_Store
+
+# VSCode settings
+.vscode/
