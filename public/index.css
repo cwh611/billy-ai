@@ -1,0 +1,121 @@
+html {
+    height: 100vh;
+    width: 100vw;
+}
+  
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column
+}
+
+#header-div {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    font-family: "Alfa Slab One", serif;
+    font-size: 30px;
+    align-items: center;
+    height: 10%
+}
+
+#h1-billy {
+    color: #BB0095
+}
+
+#main-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly
+}
+
+#todays-activity {
+    font-family: "Alfa Slab One", serif;
+    font-size: 18px;
+}
+
+button {
+    background-color: #BB00959E;
+    font-size: 18px;
+    color: #FAFAF5;
+    font-family: "Alfa Slab One", serif;
+    border: 0px;
+    border-radius: 30px;
+    width: 200px;
+    height: 50px
+}
+
+#log-summaries-container {
+    display: flex;
+    justify-content: space-evenly;
+    height: 300px;
+    width: 60%;
+    font-family: "Anuphan", serif;
+    font-size: 14px
+}
+
+.matter-summary-subcontainer {
+    height: 100%;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FAFAF5;
+    border-radius: 30px
+}
+
+.matter-summary {
+    height: 80%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.client-name {
+    font-weight: bold
+}
+
+.matter-descr {
+    font-weight: 250
+}
+
+.matter-summary-content-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start
+}
+
+.matter-summary-ul {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start
+}
+
+#log-type-btns, #bottom-btns {
+    width: 40%;
+    display: flex;
+    justify-content: space-evenly
+}
+
+.time-billed-label {
+    font-weight: bold
+}
