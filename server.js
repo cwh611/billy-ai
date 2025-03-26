@@ -6,7 +6,11 @@ const PORT = process.env.PORT || 3000;
 
 let loggerProcess = null;
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  });
 
 app.post('/start-logger', (req, res) => {
   if (loggerProcess) {
