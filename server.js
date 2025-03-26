@@ -2,7 +2,7 @@ const express = require('express');
 const { spawn } = require('child_process');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 let loggerProcess = null;
 
@@ -55,6 +55,6 @@ app.post('/stop-logger', (req, res) => {
       });
 });
 
-app.listen(PORT, () => {1
+app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
