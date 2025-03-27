@@ -37,11 +37,7 @@ function renderSummaries(summaries) {
                 </div>
             </div>
             <div class="matter-summary-content-container">
-                <ul class="matter-summary-ul">
-                    ${entry.summary.map((line, i) =>
-                        `<li class="matter-summary-content-li">${line}</li>`
-                    ).join("")}
-                </ul>
+                ${entry.summary}
             </div>
             <div class="matter-summary-time-billed">
                 <span class="time-billed-label">Total time billed:</span>
