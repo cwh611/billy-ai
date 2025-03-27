@@ -60,6 +60,7 @@ def load_logs_for_day(db_path, target_date):
     conn.close()
 
     logs = []
+
     for ts, app, window, duration in rows:
         logs.append({
             "timestamp": ts,
@@ -67,6 +68,7 @@ def load_logs_for_day(db_path, target_date):
             "window": window,
             "duration_min": round(duration / 60, 1)
         })
+    print("LOGS:", logs)
     return logs
 
 # === Format known clients and matters for GPT ===
