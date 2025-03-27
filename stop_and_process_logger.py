@@ -26,11 +26,16 @@ try:
         }
         res = requests.post(f"{HEROKU_URL}/upload-log", files=files)
         print("Heroku response:", res.text)
+        if "✅" not in res.text:
+            print("❌ Upload may have failed. Aborting.")
+            exit(1)
+        else:
+            print("🤖 Triggering GPT billing summary...")
+            res = requests.post(f"{HEROKU_URL}/stop-logger")
+            print("\n--- GPT Billing Summary ---\n")
+            print(res.text)
 except FileNotFoundError as e:
     print("❌ Error: Missing database file:", e)
     exit(1)
 
-print("🤖 Triggering GPT billing summary...")
-res = requests.post(f"{HEROKU_URL}/stop-logger")
-print("\n--- GPT Billing Summary ---\n")
-print(res.text)
+
