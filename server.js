@@ -40,7 +40,7 @@ app.post('/start-logger', (req, res) => {
 
 app.post('/stop-logger', (req, res) => {
     // assume log file was uploaded
-    exec('python3 generate_billing_summary.py', (error, stdout, stderr) => {
+    exec('python3 generate_billing_statement.py', (error, stdout, stderr) => {
       if (error) {
         console.error(`Error generating summary: ${error}`);
         return res.status(500).send(`Summary generation failed: ${error.message}`);
