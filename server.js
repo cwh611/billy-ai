@@ -70,10 +70,10 @@ app.post('/upload-log', upload.fields([
     }
 
     await fsPromises.rename(logFile, path.join(__dirname, 'activity_log.db'));
-    console.log("✅ activity_log.db uploaded.");
-
+    console.log("✅ Saved activity_log.db to:", path.join(__dirname, 'activity_log.db'));
+    
     await fsPromises.rename(matterFile, path.join(__dirname, 'matter_map.db'));
-    console.log("✅ matter_map.db uploaded.");
+    console.log("✅ Saved matter_map.db to:", path.join(__dirname, 'matter_map.db'));
 
     res.send("✅ Both databases uploaded.");
   } catch (err) {

@@ -121,8 +121,13 @@ def load_client_and_matter_maps(db_path):
 
 # === Combine into final GPT prompt ===
 def build_gpt_prompt(db_path, matter_db, date_to_analyze):
+    print("🛠 Current working directory:", os.getcwd())
+    print("📂 Files in CWD:", os.listdir())
+    print("📄 Expecting activity_log.db at:", db_path)
+    print("📄 Expecting matter_map.db at:", matter_db)
 
     logs = load_logs_for_day(db_path, date_to_analyze)
+    print("🧾 Loaded logs:", logs)
 
     client_map, matter_map = load_client_and_matter_maps(matter_db)
 
