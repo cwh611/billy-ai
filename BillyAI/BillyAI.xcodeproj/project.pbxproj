@@ -1,0 +1,546 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		138D3CE42D94C1C000B5E1CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 138D3CCA2D94C1BC00B5E1CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 138D3CD12D94C1BC00B5E1CA;
+			remoteInfo = BillyAI;
+		};
+		138D3CEE2D94C1C000B5E1CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 138D3CCA2D94C1BC00B5E1CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 138D3CD12D94C1BC00B5E1CA;
+			remoteInfo = BillyAI;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		138D3CD22D94C1BC00B5E1CA /* BillyAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BillyAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		138D3CE32D94C1C000B5E1CA /* BillyAITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BillyAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		138D3CED2D94C1C000B5E1CA /* BillyAIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BillyAIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		138D3CD42D94C1BC00B5E1CA /* BillyAI */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BillyAI;
+			sourceTree = "<group>";
+		};
+		138D3CE62D94C1C000B5E1CA /* BillyAITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BillyAITests;
+			sourceTree = "<group>";
+		};
+		138D3CF02D94C1C000B5E1CA /* BillyAIUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BillyAIUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		138D3CCF2D94C1BC00B5E1CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		138D3CE02D94C1C000B5E1CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		138D3CEA2D94C1C000B5E1CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		138D3CC92D94C1BC00B5E1CA = {
+			isa = PBXGroup;
+			children = (
+				138D3CD42D94C1BC00B5E1CA /* BillyAI */,
+				138D3CE62D94C1C000B5E1CA /* BillyAITests */,
+				138D3CF02D94C1C000B5E1CA /* BillyAIUITests */,
+				138D3CD32D94C1BC00B5E1CA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		138D3CD32D94C1BC00B5E1CA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				138D3CD22D94C1BC00B5E1CA /* BillyAI.app */,
+				138D3CE32D94C1C000B5E1CA /* BillyAITests.xctest */,
+				138D3CED2D94C1C000B5E1CA /* BillyAIUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		138D3CD12D94C1BC00B5E1CA /* BillyAI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 138D3CF72D94C1C000B5E1CA /* Build configuration list for PBXNativeTarget "BillyAI" */;
+			buildPhases = (
+				138D3CCE2D94C1BC00B5E1CA /* Sources */,
+				138D3CCF2D94C1BC00B5E1CA /* Frameworks */,
+				138D3CD02D94C1BC00B5E1CA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				138D3CD42D94C1BC00B5E1CA /* BillyAI */,
+			);
+			name = BillyAI;
+			packageProductDependencies = (
+			);
+			productName = BillyAI;
+			productReference = 138D3CD22D94C1BC00B5E1CA /* BillyAI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		138D3CE22D94C1C000B5E1CA /* BillyAITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 138D3CFA2D94C1C000B5E1CA /* Build configuration list for PBXNativeTarget "BillyAITests" */;
+			buildPhases = (
+				138D3CDF2D94C1C000B5E1CA /* Sources */,
+				138D3CE02D94C1C000B5E1CA /* Frameworks */,
+				138D3CE12D94C1C000B5E1CA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				138D3CE52D94C1C000B5E1CA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				138D3CE62D94C1C000B5E1CA /* BillyAITests */,
+			);
+			name = BillyAITests;
+			packageProductDependencies = (
+			);
+			productName = BillyAITests;
+			productReference = 138D3CE32D94C1C000B5E1CA /* BillyAITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		138D3CEC2D94C1C000B5E1CA /* BillyAIUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 138D3CFD2D94C1C000B5E1CA /* Build configuration list for PBXNativeTarget "BillyAIUITests" */;
+			buildPhases = (
+				138D3CE92D94C1C000B5E1CA /* Sources */,
+				138D3CEA2D94C1C000B5E1CA /* Frameworks */,
+				138D3CEB2D94C1C000B5E1CA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				138D3CEF2D94C1C000B5E1CA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				138D3CF02D94C1C000B5E1CA /* BillyAIUITests */,
+			);
+			name = BillyAIUITests;
+			packageProductDependencies = (
+			);
+			productName = BillyAIUITests;
+			productReference = 138D3CED2D94C1C000B5E1CA /* BillyAIUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		138D3CCA2D94C1BC00B5E1CA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					138D3CD12D94C1BC00B5E1CA = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					138D3CE22D94C1C000B5E1CA = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 138D3CD12D94C1BC00B5E1CA;
+					};
+					138D3CEC2D94C1C000B5E1CA = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 138D3CD12D94C1BC00B5E1CA;
+					};
+				};
+			};
+			buildConfigurationList = 138D3CCD2D94C1BC00B5E1CA /* Build configuration list for PBXProject "BillyAI" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 138D3CC92D94C1BC00B5E1CA;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 138D3CD32D94C1BC00B5E1CA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				138D3CD12D94C1BC00B5E1CA /* BillyAI */,
+				138D3CE22D94C1C000B5E1CA /* BillyAITests */,
+				138D3CEC2D94C1C000B5E1CA /* BillyAIUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		138D3CD02D94C1BC00B5E1CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		138D3CE12D94C1C000B5E1CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		138D3CEB2D94C1C000B5E1CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		138D3CCE2D94C1BC00B5E1CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		138D3CDF2D94C1C000B5E1CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		138D3CE92D94C1C000B5E1CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		138D3CE52D94C1C000B5E1CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 138D3CD12D94C1BC00B5E1CA /* BillyAI */;
+			targetProxy = 138D3CE42D94C1C000B5E1CA /* PBXContainerItemProxy */;
+		};
+		138D3CEF2D94C1C000B5E1CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 138D3CD12D94C1BC00B5E1CA /* BillyAI */;
+			targetProxy = 138D3CEE2D94C1C000B5E1CA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		138D3CF52D94C1C000B5E1CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		138D3CF62D94C1C000B5E1CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		138D3CF82D94C1C000B5E1CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BillyAI/BillyAI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BillyAI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chunk.BillyAI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		138D3CF92D94C1C000B5E1CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BillyAI/BillyAI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BillyAI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chunk.BillyAI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		138D3CFB2D94C1C000B5E1CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chunk.BillyAITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BillyAI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BillyAI";
+			};
+			name = Debug;
+		};
+		138D3CFC2D94C1C000B5E1CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chunk.BillyAITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BillyAI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BillyAI";
+			};
+			name = Release;
+		};
+		138D3CFE2D94C1C000B5E1CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chunk.BillyAIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BillyAI;
+			};
+			name = Debug;
+		};
+		138D3CFF2D94C1C000B5E1CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chunk.BillyAIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BillyAI;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		138D3CCD2D94C1BC00B5E1CA /* Build configuration list for PBXProject "BillyAI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				138D3CF52D94C1C000B5E1CA /* Debug */,
+				138D3CF62D94C1C000B5E1CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		138D3CF72D94C1C000B5E1CA /* Build configuration list for PBXNativeTarget "BillyAI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				138D3CF82D94C1C000B5E1CA /* Debug */,
+				138D3CF92D94C1C000B5E1CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		138D3CFA2D94C1C000B5E1CA /* Build configuration list for PBXNativeTarget "BillyAITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				138D3CFB2D94C1C000B5E1CA /* Debug */,
+				138D3CFC2D94C1C000B5E1CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		138D3CFD2D94C1C000B5E1CA /* Build configuration list for PBXNativeTarget "BillyAIUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				138D3CFE2D94C1C000B5E1CA /* Debug */,
+				138D3CFF2D94C1C000B5E1CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 138D3CCA2D94C1BC00B5E1CA /* Project object */;
+}

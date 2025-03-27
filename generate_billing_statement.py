@@ -42,6 +42,8 @@ def load_csv_map(path, key_field):
 
 # === Load logs for a specific day ===
 def load_logs_for_day(db_path, target_date):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(script_dir, "activity_log.db")
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     start_dt = datetime.datetime.combine(target_date, datetime.time.min)

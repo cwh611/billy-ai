@@ -65,7 +65,9 @@ def get_frontmost_app_and_title():
 
 
 def setup_database():
-    conn = sqlite3.connect('activity_log.db')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(script_dir, "activity_log.db")
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS activity_logs (
@@ -81,7 +83,8 @@ def setup_database():
 
 
 def log_active_windows(interval=5):
-    log_file = "activity_log.csv"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    log_file = os.path.join(script_dir, "activity_log.csv")
     file_exists = os.path.isfile(log_file)
     db_conn = setup_database()
     db_cursor = db_conn.cursor()

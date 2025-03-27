@@ -20,3 +20,12 @@ build/
 
 # VSCode settings
 .vscode/
+
+# Xcode project
+BillyAI/DerivedData/
+BillyAI/Build/
+BillyAI/*.xcworkspace
+BillyAI/*.xcodeproj/project.xcworkspace/
+BillyAI/*.xcodeproj/xcuserdata/
+BillyAI/*.xcodeproj/*.xcuserstate
+BillyAI/*.xcodeproj/*.pbxuser
