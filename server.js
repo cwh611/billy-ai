@@ -39,27 +39,21 @@ app.post('/start-logger', (req, res) => {
 });
 
 app.post('/stop-logger', (req, res) => {
-    if (!loggerProcess) {
-        return res.status(400).send('Logger is not running.');
+    // assume log file was uploaded
+    exec('python3 generate_billing_summary.py', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error generating summary: ${error}`);
+        return res.status(500).send(`Summary generation failed: ${error.message}`);
       }
-    
-      loggerProcess.kill('SIGTERM');
-      loggerProcess = null;
-    
-      exec('python3 generate_billing_summary.py', (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error generating summary: ${error}`);
-          return res.status(500).send(`Summary generation failed: ${error.message}`);
-        }
-        if (stderr) {
-          console.error(`Summary stderr: ${stderr}`);
-          // optional: you could still send stdout back if it succeeded
-        }
-    
-        console.log('Billing summary generated.');
-        res.type('text/plain').send(stdout);
-      });
-});
+  
+      if (stderr) {
+        console.error(`Summary stderr: ${stderr}`);
+      }
+  
+      console.log('Billing summary generated.');
+      res.type('text/plain').send(stdout);
+    });
+  });
 
 const fsPromises = require('fs/promises');
 
