@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 import sys
 import json
+import re
 
 # === Handle CLI date override ===
 if len(sys.argv) > 1:
@@ -132,12 +133,21 @@ def build_gpt_prompt(db_path, matter_db, date_to_analyze):
 
     return prompt
 
-def parse_summary_to_json(gpt_response):
+def parse_summary_to_json(response):
+    cleaned_response = re.sub(r"^```(?:json)?\s*|\s*```$", "", response.strip(), flags=re.IGNORECASE)
+
     try:
-        return json.loads(gpt_response)
-    except json.JSONDecodeError:
+        parsed_summary = json.loads(cleaned_response)
+    except Exception as e:
         print("❌ Failed to parse GPT output as JSON.")
-        return []
+        print("--- Raw GPT Output ---\n")
+        print(response)
+        print("\n--- Cleaned Output ---\n")
+        print(cleaned_response)
+        parsed_summary = []
+
+    return parsed_summary
+
 
 # === Run Script ===
 if __name__ == "__main__":
