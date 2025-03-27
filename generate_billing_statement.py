@@ -95,11 +95,35 @@ def build_activity_log_text(logs):
         lines.append(f"- {time_str} — {log['app']} — {log['window']} — {log['duration_min']} min")
     return "\n".join(lines)
 
+def load_client_and_matter_maps(db_path):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Load clients
+    cursor.execute("SELECT client_number, client_name FROM clients")
+    clients = {row[0]: {"client_number": row[0], "client_name": row[1]} for row in cursor.fetchall()}
+
+    # Load matters
+    cursor.execute("SELECT matter_number, client_number, matter_descr FROM matters")
+    matters = {}
+    for row in cursor.fetchall():
+        matter_number, client_number, descr = row
+        key = descr.lower()
+        matters[key] = {
+            "matter_number": matter_number,
+            "client_number": client_number,
+            "matter_descr": descr
+        }
+
+    conn.close()
+    return clients, matters
+
 # === Combine into final GPT prompt ===
-def build_gpt_prompt(db_path, client_csv, matter_csv, date_to_analyze):
-    client_map = load_csv_map(client_csv, key_field="client_number")
-    matter_map = load_csv_map(matter_csv, key_field="matter_descr")
+def build_gpt_prompt(db_path, matter_db, date_to_analyze):
+
     logs = load_logs_for_day(db_path, date_to_analyze)
+
+    client_map, matter_map = load_client_and_matter_maps(matter_db)
 
     context = build_client_matter_context(client_map, matter_map)
     activity = build_activity_log_text(logs)
@@ -116,11 +140,12 @@ def build_gpt_prompt(db_path, client_csv, matter_csv, date_to_analyze):
 
 # === Example usage ===
 if __name__ == "__main__":
-    db_path = "activity_log.db"
-    client_csv = "testing_docs/client_map.csv"
-    matter_csv = "testing_docs/client_matter_map.csv"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    prompt = build_gpt_prompt(db_path, client_csv, matter_csv, date_to_analyze)
+    db_path = os.path.join(script_dir, "activity_log.db")
+    matter_db = os.path.join(script_dir, "matter_map.db")
+
+    prompt = build_gpt_prompt(db_path, matter_db, date_to_analyze)
 
     print("\n--- GPT Prompt ---\n")
     print(prompt[:1000])  # Preview
