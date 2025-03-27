@@ -52,7 +52,7 @@ def load_logs_for_day(db_path, target_date):
         SELECT timestamp, app, window, duration_seconds
         FROM activity_logs
         ORDER BY timestamp ASC
-    """, (start_dt.strftime("%Y-%m-%d %H:%M:%S"), end_dt.strftime("%Y-%m-%d %H:%M:%S")))
+    """)
     
     rows = cursor.fetchall()
     conn.close()
