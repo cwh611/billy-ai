@@ -1,22 +1,11 @@
-const start_stop_logger_btn = document.getElementById("start-stop-logger-btn");
+const update_logs_btn = document.getElementById("update-logs-btn");
 const review_logs_btn = document.getElementById("review-logs-btn");
 
-let logging = false;
+const app_url = "https://billy-ai-demo-1d85d1d40d53.herokuapp.com"
 
-start_stop_logger_btn.addEventListener("click", () => {
-    if (logging === false) {
-        start_stop_logger_btn.innerText = "Stop logger";
-        logging = true;
-        fetch("/start-logger", { method: "POST" })
-        .then(res => res.text())
-        .then(data => console.log("Logger started:", data))
-        .catch(err => console.error("Error starting logger:", err));
-    } else if (logging === true) {
-        start_stop_logger_btn.innerText = "Start logger";
-        logging = false;
-        fetch("/stop-logger", { method: "POST" })
-        .then(res => res.text())
-        .then(data => console.log(data))
-        .catch(err => console.error("Stop error:", err));
-    }
+update_logs_btn.addEventListener("click", () => {
+    fetch(`${app_url}/fetch-latest-summaries`, { method: "GET" })
+    .then(res => res.json())
+    .then(data => console.log("Data retrieved:", data))
+    .catch(err => console.error("Error retrieving data:", err));
 })

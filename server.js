@@ -9,6 +9,8 @@ const fs = require('fs');
 
 let loggerProcess = null;
 
+let latest_billing_summaries = ""
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
@@ -51,6 +53,7 @@ app.post('/stop-logger', (req, res) => {
       }
   
       console.log('Billing summary generated.');
+      latest_billing_summary = stdout
       res.type('text/plain').send(stdout);
     });
   });
@@ -82,6 +85,16 @@ app.post('/upload-log', upload.fields([
   }
 });
 
+app.get('/fetch-latest-summaries', (req, res) => {
+    const summary_path = path.join(__dirname, 'latest_summary.json');
+    fs.readFile(summary_path, 'utf8', (err, data) => {
+      if (err) {
+        console.error("Error reading summary:", err);
+        return res.status(500).send("Summary not available.");
+      }
+      res.type('application/json').send(data);
+    });
+  });
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

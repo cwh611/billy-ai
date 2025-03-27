@@ -6,59 +6,53 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import sys
+import json
 
+# === Handle CLI date override ===
 if len(sys.argv) > 1:
     date_to_analyze = datetime.datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
 else:
     date_to_analyze = datetime.date.today()
 
-# Load your API key from .env
+# === Initialize OpenAI ===
 load_dotenv()
-client = OpenAI() 
+client = OpenAI()
 
-def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=800):
+def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=1000):
     response = client.chat.completions.create(
         model=model,
         messages=[
-            {"role": "system", "content": "You are a billing assistant for a corporate law firm. Given logs of activity and a list of client matters, generate a billing summary for each matter."},
-            {"role": "user", "content": prompt}
+            {
+                "role": "system",
+                "content": (
+                    "You are a billing assistant for a corporate law firm. "
+                    "Given logs of activity and a list of client matters, generate a billing summary "
+                    "for each matter. Your response MUST be a valid JSON array. "
+                    "Each object should contain: client, matter, summary, and time_billed."
+                )
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
         ],
         temperature=0.3,
         max_tokens=max_tokens
     )
     return response.choices[0].message.content
 
-# === Load mapping files ===
-def load_csv_map(path, key_field):
-    mapping = {}
-    with open(path, newline='') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            # Normalize headers and values
-            row = {k.strip().lower().replace(" ", "_"): v.strip() for k, v in row.items()}
-            key = row[key_field].lower()
-            mapping[key] = row
-    return mapping
-
-# === Load logs for a specific day ===
 def load_logs_for_day(db_path, target_date):
-
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    start_dt = datetime.datetime.combine(target_date, datetime.time.min)
-    end_dt = datetime.datetime.combine(target_date, datetime.time.max)
-
     cursor.execute("""
         SELECT timestamp, app, window, duration_seconds
         FROM activity_logs
         ORDER BY timestamp ASC
     """)
-    
     rows = cursor.fetchall()
     conn.close()
 
     logs = []
-
     for ts, app, window, duration in rows:
         logs.append({
             "timestamp": ts,
@@ -66,34 +60,7 @@ def load_logs_for_day(db_path, target_date):
             "window": window,
             "duration_min": round(duration / 60, 1)
         })
-    print("LOGS:", logs)
     return logs
-
-# === Format known clients and matters for GPT ===
-def build_client_matter_context(client_map, matter_map):
-    grouped = defaultdict(list)
-    for _, matter in matter_map.items():
-        client_number = matter["client_number"]
-        matter_number = matter["matter_number"]
-        matter_descr = matter["matter_descr"]
-        client_name = client_map.get(client_number, {}).get("client_name", f"Client {client_number}")
-        grouped[(client_name, client_number)].append((matter_number, matter_descr))
-
-    lines = ["Here is a list of clients and their matters:\n"]
-    for (client_name, client_number), matters in grouped.items():
-        lines.append(f"- {client_name} ({client_number}):")
-        for matter_number, descr in matters:
-            lines.append(f"  - {matter_number}: {descr}")
-    return "\n".join(lines)
-
-# === Format the activity log for GPT ===
-def build_activity_log_text(logs):
-    lines = ["\nHere is a full-day log of activity:\n"]
-    for log in logs:
-        ts = datetime.datetime.strptime(log["timestamp"], "%Y-%m-%d %H:%M:%S")
-        time_str = ts.strftime("%-I:%M %p")
-        lines.append(f"- {time_str} — {log['app']} — {log['window']} — {log['duration_min']} min")
-    return "\n".join(lines)
 
 def load_client_and_matter_maps(db_path):
     conn = sqlite3.connect(db_path)
@@ -118,16 +85,32 @@ def load_client_and_matter_maps(db_path):
     conn.close()
     return clients, matters
 
-# === Combine into final GPT prompt ===
+def build_client_matter_context(client_map, matter_map):
+    grouped = defaultdict(list)
+    for _, matter in matter_map.items():
+        client_number = matter["client_number"]
+        matter_number = matter["matter_number"]
+        matter_descr = matter["matter_descr"]
+        client_name = client_map.get(client_number, {}).get("client_name", f"Client {client_number}")
+        grouped[(client_name, client_number)].append((matter_number, matter_descr))
+
+    lines = ["Here is a list of clients and their matters:\n"]
+    for (client_name, client_number), matters in grouped.items():
+        lines.append(f"- {client_name} ({client_number}):")
+        for matter_number, descr in matters:
+            lines.append(f"  - {matter_number}: {descr}")
+    return "\n".join(lines)
+
+def build_activity_log_text(logs):
+    lines = ["\nHere is a full-day log of activity:\n"]
+    for log in logs:
+        ts = datetime.datetime.strptime(log["timestamp"], "%Y-%m-%d %H:%M:%S")
+        time_str = ts.strftime("%-I:%M %p")
+        lines.append(f"- {time_str} — {log['app']} — {log['window']} — {log['duration_min']} min")
+    return "\n".join(lines)
+
 def build_gpt_prompt(db_path, matter_db, date_to_analyze):
-    print("🛠 Current working directory:", os.getcwd())
-    print("📂 Files in CWD:", os.listdir())
-    print("📄 Expecting activity_log.db at:", db_path)
-    print("📄 Expecting matter_map.db at:", matter_db)
-
     logs = load_logs_for_day(db_path, date_to_analyze)
-    print("🧾 Loaded logs:", logs)
-
     client_map, matter_map = load_client_and_matter_maps(matter_db)
 
     context = build_client_matter_context(client_map, matter_map)
@@ -136,14 +119,27 @@ def build_gpt_prompt(db_path, matter_db, date_to_analyze):
     prompt = (
         f"{context}\n\n"
         f"{activity}\n\n"
-        "Please analyze the activity log and assign each entry to the most likely client and matter from the list above. "
-        "Group your response by matter. For each matter, estimate the total time spent and provide a billing summary "
-        "in professional legal billing language."
+        "Return ONLY valid JSON in this format:\n\n"
+        '[\n'
+        '  {\n'
+        '    "client": "Microsoft",\n'
+        '    "matter": "488",\n'
+        '    "summary": "Drafted motion for summary judgment...",\n'
+        '    "time_billed": "5 hours"\n'
+        '  }\n'
+        ']'
     )
 
     return prompt
 
-# === Example usage ===
+def parse_summary_to_json(gpt_response):
+    try:
+        return json.loads(gpt_response)
+    except json.JSONDecodeError:
+        print("❌ Failed to parse GPT output as JSON.")
+        return []
+
+# === Run Script ===
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -152,9 +148,17 @@ if __name__ == "__main__":
 
     prompt = build_gpt_prompt(db_path, matter_db, date_to_analyze)
 
-    print("\n--- GPT Prompt ---\n")
-    print(prompt[:1000])  # Preview
+    print("\n--- GPT Prompt (Preview) ---\n")
+    print(prompt[:1000])
 
     response = send_prompt_to_gpt(prompt)
-    print("\n--- GPT Billing Summary ---\n")
+    print("\n--- Raw GPT Output ---\n")
     print(response)
+
+    parsed_json = parse_summary_to_json(response)
+    print("\n--- Parsed JSON ---\n")
+    print(json.dumps(parsed_json, indent=2))
+
+    # Save JSON to file
+    with open("latest_summary.json", "w") as f:
+        json.dump(parsed_json, f, indent=2)
