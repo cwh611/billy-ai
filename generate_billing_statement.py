@@ -51,7 +51,6 @@ def load_logs_for_day(db_path, target_date):
     cursor.execute("""
         SELECT timestamp, app, window, duration_seconds
         FROM activity_logs
-        WHERE timestamp BETWEEN ? AND ?
         ORDER BY timestamp ASC
     """, (start_dt.strftime("%Y-%m-%d %H:%M:%S"), end_dt.strftime("%Y-%m-%d %H:%M:%S")))
     
