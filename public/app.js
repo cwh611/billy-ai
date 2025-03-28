@@ -76,14 +76,14 @@ function renderSummaries(summaries) {
             <div class="edit-mode" style="display: none;">
                 <div class="summary-header-container">
                     <select class="client-select">
-                        ${clientOptions.map(opt => `
+                        ${client_options.map(opt => `
                             <option value="${opt.number}" ${opt.number === entry.client_number ? "selected" : ""}>
                                 ${opt.name} (${opt.number})
                             </option>
                         `).join("")}
                     </select>
                     <select class="matter-select">
-                        ${matterOptions.map(opt => `
+                        ${matter_options.map(opt => `
                             <option value="${opt.number}" ${opt.number === entry.matter_number ? "selected" : ""}>
                                 ${opt.descr} (${opt.number})
                             </option>
