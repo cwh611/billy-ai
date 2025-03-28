@@ -114,7 +114,7 @@ app.post('/upload-log', upload.fields([
 });
 
 app.get('/fetch-latest-summaries', (req, res) => {
-  const db = new sqlite3.Database(dbPath);
+  const db = new sqlite3.Database(billing_summaries_db_path);
 
   const sql = `
     SELECT client_name, client_number, matter_number, matter_descr, work_summary, time_billed
@@ -147,7 +147,7 @@ app.get('/fetch-latest-summaries', (req, res) => {
 // GET /get-client-map
 app.get('/get-client-map', (req, res) => {
     const db = new sqlite3.Database(matterDbPath);
-    const sql = `SELECT DISTINCT client_number, client_name FROM matter_map`;
+    const sql = `SELECT DISTINCT client_number, client_name FROM clients`;
   
     db.all(sql, [], (err, rows) => {
       db.close();
@@ -168,7 +168,7 @@ app.get('/get-client-map', (req, res) => {
   // GET /get-matter-map
   app.get('/get-matter-map', (req, res) => {
     const db = new sqlite3.Database(matterDbPath);
-    const sql = `SELECT DISTINCT matter_number, matter_descr FROM matter_map`;
+    const sql = `SELECT DISTINCT matter_number, matter_descr FROM matters`;
   
     db.all(sql, [], (err, rows) => {
       db.close();
