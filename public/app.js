@@ -37,7 +37,7 @@ function renderSummaries(summaries) {
                 </div>
             </div>
             <div class="matter-summary-content-container">
-                ${entry.summary}
+                ${entry.work_summary}
             </div>
             <div class="matter-summary-time-billed">
                 <span class="time-billed-label">Total time billed:</span>

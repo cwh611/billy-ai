@@ -29,7 +29,7 @@ def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=1000):
                     "You are a billing assistant for a corporate law firm. "
                     "Given logs of activity and a list of client matters, generate a billing summary "
                     "for each matter. Your response MUST be a valid JSON array. "
-                    "Each object should contain: client, matter, summary, and time_billed."
+                    "Each object should contain: client_name, client_number, matter_number, matter_descr, work_summary, and time_billed."
                 )
             },
             {
@@ -123,10 +123,12 @@ def build_gpt_prompt(db_path, matter_db, date_to_analyze):
         "Return ONLY valid JSON in this format:\n\n"
         '[\n'
         '  {\n'
-        '    "client": "Microsoft",\n'
-        '    "matter": "488",\n'
-        '    "summary": "Drafted motion for summary judgment...",\n'
-        '    "time_billed": "5 hours"\n'
+        '    "client_name": "Google",\n'
+        '    "client_number": "3467",\n'
+        '    "matter_number": "235",\n'
+        '    "matter_descr": "Google Antitrust Investigation",\n'
+        '    "work_summary": "Drafted motion for summary judgment...",\n'
+        '    "time_billed": "5 hours, 3 minutes."\n'
         '  }\n'
         ']'
     )
