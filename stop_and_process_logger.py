@@ -38,4 +38,3 @@ except FileNotFoundError as e:
     print("❌ Error: Missing database file:", e)
     exit(1)
 
-
