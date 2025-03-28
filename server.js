@@ -100,17 +100,35 @@ app.post('/upload-log', upload.fields([
       return res.status(400).send("Missing one or both files.");
     }
 
-    await fsPromises.rename(logFile, path.join(__dirname, 'activity_log.db'));
-    console.log("✅ Saved activity_log.db to:", path.join(__dirname, 'activity_log.db'));
-    
-    await fsPromises.rename(matterFile, path.join(__dirname, 'matter_map.db'));
-    console.log("✅ Saved matter_map.db to:", path.join(__dirname, 'matter_map.db'));
+    const logDest = path.join(__dirname, 'activity_log.db');
+    const matterDest = path.join(__dirname, 'matter_map.db');
+
+    // Overwrite both files (safely)
+    await fsPromises.copyFile(logFile, logDest);
+    await fsPromises.copyFile(matterFile, matterDest);
+
+    // Log file sizes to verify
+    const logStats = await fsPromises.stat(logDest);
+    const matterStats = await fsPromises.stat(matterDest);
+    console.log(`✅ Saved activity_log.db (${logStats.size} bytes)`);
+    console.log(`✅ Saved matter_map.db (${matterStats.size} bytes)`);
 
     res.send("✅ Both databases uploaded.");
   } catch (err) {
     console.error("❌ Error saving uploaded files:", err);
     res.status(500).send("Error saving files.");
   }
+});
+
+app.get('/debug-db', (req, res) => {
+  const db = new sqlite3.Database(path.join(__dirname, 'matter_map.db'));
+  db.all("SELECT name FROM sqlite_master WHERE type='table'", [], (err, rows) => {
+    db.close();
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ tables: rows.map(r => r.name) });
+  });
 });
 
 app.get('/fetch-latest-summaries', (req, res) => {
