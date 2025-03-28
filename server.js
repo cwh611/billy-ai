@@ -6,6 +6,8 @@ const PORT = process.env.PORT || 3000;
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
+const sqlite3 = require('sqlite3').verbose();
+const matterDbPath = path.join(__dirname, 'matter_map.db');
 
 let loggerProcess = null;
 
@@ -95,6 +97,49 @@ app.get('/fetch-latest-summaries', (req, res) => {
       res.type('application/json').send(data);
     });
   });
+
+// GET /get-client-map
+app.get('/get-client-map', (req, res) => {
+    const db = new sqlite3.Database(matterDbPath);
+    const sql = `SELECT DISTINCT client_number, client_name FROM matter_map`;
+  
+    db.all(sql, [], (err, rows) => {
+      db.close();
+      if (err) {
+        console.error("❌ Error fetching client map:", err);
+        return res.status(500).json({ error: "Failed to fetch client map" });
+      }
+  
+      const clientMap = {};
+      rows.forEach(row => {
+        clientMap[row.client_number] = row.client_name;
+      });
+  
+      res.json(clientMap);
+    });
+  });
+  
+  // GET /get-matter-map
+  app.get('/get-matter-map', (req, res) => {
+    const db = new sqlite3.Database(matterDbPath);
+    const sql = `SELECT DISTINCT matter_number, matter_descr FROM matter_map`;
+  
+    db.all(sql, [], (err, rows) => {
+      db.close();
+      if (err) {
+        console.error("❌ Error fetching matter map:", err);
+        return res.status(500).json({ error: "Failed to fetch matter map" });
+      }
+  
+      const matterMap = {};
+      rows.forEach(row => {
+        matterMap[row.matter_number] = row.matter_descr;
+      });
+  
+      res.json(matterMap);
+    });
+  });
+  
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
