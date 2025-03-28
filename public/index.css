@@ -49,7 +49,7 @@ main {
     font-size: 18px;
 }
 
-button {
+#update-logs-btn, #review-logs-btn, #summary-btn, #detail-btn {
     background-color: #BB00959E;
     font-size: 18px;
     color: #FAFAF5;

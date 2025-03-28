@@ -173,9 +173,7 @@ if __name__ == "__main__":
     print(response)
 
     parsed_json = parse_summary_to_json(response)
-    print("\n--- Parsed JSON ---\n")
-    print(json.dumps(parsed_json, indent=2))
-
-    # Save JSON to file
-    with open("latest_summary.json", "w") as f:
-        json.dump(parsed_json, f, indent=2)
+    if not parsed_json:
+        print("⚠️ No valid summaries generated. Exiting.")
+        sys.exit(1)
+    print(json.dumps(parsed_json))

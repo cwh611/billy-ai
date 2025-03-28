@@ -8,6 +8,7 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 const matterDbPath = path.join(__dirname, 'matter_map.db');
+const billing_summaries_db_path = path.join(__dirname, "billing_summaries.db")
 
 let loggerProcess = null;
 
@@ -57,6 +58,31 @@ app.post('/stop-logger', (req, res) => {
       console.log('Billing summary generated.');
       latest_billing_summary = stdout
       res.type('text/plain').send(stdout);
+
+      const parsedSummaries = JSON.parse(stdout);
+
+      // Insert into SQLite
+      const db = new sqlite3.Database(billing_summaries_db_path);
+      const insertStmt = db.prepare(`
+        INSERT INTO billing_summary (
+          client_name, client_number, matter_number, matter_descr, work_summary, time_billed
+        ) VALUES (?, ?, ?, ?, ?, ?)
+      `);
+  
+      for (const entry of parsedSummaries) {
+        insertStmt.run(
+          entry.client_name,
+          entry.client_number,
+          entry.matter_number,
+          entry.matter_descr,
+          JSON.stringify(entry.work_summary), // stringify array
+          entry.time_billed
+        );
+      }
+  
+      insertStmt.finalize();
+      db.close();
+
     });
   });
 
@@ -88,15 +114,35 @@ app.post('/upload-log', upload.fields([
 });
 
 app.get('/fetch-latest-summaries', (req, res) => {
-    const summary_path = path.join(__dirname, 'latest_summary.json');
-    fs.readFile(summary_path, 'utf8', (err, data) => {
-      if (err) {
-        console.error("Error reading summary:", err);
-        return res.status(500).send("Summary not available.");
-      }
-      res.type('application/json').send(data);
-    });
+  const db = new sqlite3.Database(dbPath);
+
+  const sql = `
+    SELECT client_name, client_number, matter_number, matter_descr, work_summary, time_billed
+    FROM billing_summary
+    ORDER BY created_at DESC
+    LIMIT 50
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    db.close();
+
+    if (err) {
+      console.error("❌ Error reading from billing_summaries.db:", err);
+      return res.status(500).send("Summary not available.");
+    }
+
+    const summaries = rows.map(row => ({
+      client_name: row.client_name,
+      client_number: row.client_number,
+      matter_number: row.matter_number,
+      matter_descr: row.matter_descr,
+      work_summary: JSON.parse(row.work_summary), // parse stringified array
+      time_billed: row.time_billed
+    }));
+
+    res.json(summaries);
   });
+});
 
 // GET /get-client-map
 app.get('/get-client-map', (req, res) => {
@@ -114,7 +160,7 @@ app.get('/get-client-map', (req, res) => {
       rows.forEach(row => {
         clientMap[row.client_number] = row.client_name;
       });
-  
+      console.log(clientMap)
       res.json(clientMap);
     });
   });
@@ -135,7 +181,7 @@ app.get('/get-client-map', (req, res) => {
       rows.forEach(row => {
         matterMap[row.matter_number] = row.matter_descr;
       });
-  
+      console.log(matterMap)
       res.json(matterMap);
     });
   });
