@@ -165,15 +165,21 @@ if __name__ == "__main__":
 
     prompt = build_gpt_prompt(db_path, matter_db, date_to_analyze)
 
-    print("\n--- GPT Prompt (Preview) ---\n")
-    print(prompt[:1000])
+    # REMOVE or comment out:
+    # print("\n--- GPT Prompt (Preview) ---\n")
+    # print(prompt[:1000])
 
     response = send_prompt_to_gpt(prompt)
-    print("\n--- Raw GPT Output ---\n")
-    print(response)
+
+    # REMOVE or comment out:
+    # print("\n--- Raw GPT Output ---\n")
+    # print(response)
 
     parsed_json = parse_summary_to_json(response)
     if not parsed_json:
         print("⚠️ No valid summaries generated. Exiting.")
         sys.exit(1)
+
+    # ✅ This line stays
     print(json.dumps(parsed_json))
+
