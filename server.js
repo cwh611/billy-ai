@@ -90,35 +90,29 @@ const fsPromises = require('fs/promises');
 
 app.post('/upload-log', upload.fields([
   { name: 'logfile', maxCount: 1 },
-  { name: 'matterfile', maxCount: 1 }
+  { name: 'matterfile', maxCount: 1 },
+  { name: 'summaryfile', maxCount: 1 }  // 👈 add this
 ]), async (req, res) => {
   try {
     const logFile = req.files['logfile']?.[0]?.path;
     const matterFile = req.files['matterfile']?.[0]?.path;
+    const summaryFile = req.files['summaryfile']?.[0]?.path;
 
-    if (!logFile || !matterFile) {
-      return res.status(400).send("Missing one or both files.");
+    if (!logFile || !matterFile || !summaryFile) {
+      return res.status(400).send("Missing one or more files.");
     }
 
-    const logDest = path.join(__dirname, 'activity_log.db');
-    const matterDest = path.join(__dirname, 'matter_map.db');
+    await fsPromises.copyFile(logFile, path.join(__dirname, 'activity_log.db'));
+    await fsPromises.copyFile(matterFile, path.join(__dirname, 'matter_map.db'));
+    await fsPromises.copyFile(summaryFile, path.join(__dirname, 'billing_summaries.db'));
 
-    // Overwrite both files (safely)
-    await fsPromises.copyFile(logFile, logDest);
-    await fsPromises.copyFile(matterFile, matterDest);
-
-    // Log file sizes to verify
-    const logStats = await fsPromises.stat(logDest);
-    const matterStats = await fsPromises.stat(matterDest);
-    console.log(`✅ Saved activity_log.db (${logStats.size} bytes)`);
-    console.log(`✅ Saved matter_map.db (${matterStats.size} bytes)`);
-
-    res.send("✅ Both databases uploaded.");
+    res.send("✅ All databases uploaded.");
   } catch (err) {
     console.error("❌ Error saving uploaded files:", err);
     res.status(500).send("Error saving files.");
   }
 });
+
 
 app.get('/debug-db', (req, res) => {
   const db = new sqlite3.Database(path.join(__dirname, 'matter_map.db'));
