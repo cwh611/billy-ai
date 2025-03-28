@@ -16,13 +16,15 @@ time.sleep(1)  # Give it a moment to shut down
 script_dir = os.path.dirname(os.path.abspath(__file__))
 activity_path = os.path.join(script_dir, "activity_log.db")
 matter_path = os.path.join(script_dir, "matter_map.db")
+summary_path = os.path.join(script_dir, "billing_summaries.db")
 
 print("📤 Uploading logs to Heroku...")
 try:
-    with open(activity_path, "rb") as f1, open(matter_path, "rb") as f2:
+    with open(activity_path, "rb") as f1, open(matter_path, "rb") as f2, open(summary_path, "rb") as f3:
         files = {
             'logfile': f1,
-            'matterfile': f2
+            'matterfile': f2,
+            'summaryfile': f3
         }
         res = requests.post(f"{HEROKU_URL}/upload-log", files=files)
         print("Heroku response:", res.text)
