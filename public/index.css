@@ -179,7 +179,7 @@ main {
     width: 100%;
 }
 
-.edit-summary-btn, .save-summary-btn {
+.edit-save-summary-btn {
     border-bottom-left-radius: 30px;
     border: 0px;
     font-family: "Alfa Slab One", serif;
