@@ -2,7 +2,6 @@
 __pycache__/
 *.py[cod]
 *.sqlite3
-*.db
 *.log
 billy-ai-venv-py311/
 .env
@@ -22,7 +21,7 @@ build/
 .vscode/
 
 # Xcode project
-BillyAI/
+/BillyAI/
 BillyAI/DerivedData/
 BillyAI/Build/
 BillyAI/*.xcworkspace
