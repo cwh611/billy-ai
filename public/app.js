@@ -90,6 +90,13 @@ function renderSummaries(summaries) {
                         `).join("")}
                     </select>
                 </div>
+                <div contenteditable="true" class="matter-summary-content-container">
+                    <ul class="matter-summary-ul">
+                        ${entry.work_summary.map(task => `
+                            <li class="matter-summary-content-li" contenteditable="true">${task}</li>
+                        `).join("")}
+                    </ul>
+                </div>
                 <div class="matter-summary-time-billed">
                     <span class="time-billed-label">Total time billed:</span>
                     <span contenteditable="true" class="time-billed-number">${entry.time_billed}</span>
@@ -99,24 +106,39 @@ function renderSummaries(summaries) {
 
         const controlsHTML = `
             <div class="summary-controls">
-                <button class="edit-summary-btn" data-index="${index}">Edit</button>
+                <button class="edit-save-summary-btn" data-index="${index}">Edit</button>
                 <button class="delete-summary-btn" data-index="${index}">Delete</button>
             </div>
         `;
 
-        sub.innerHTML = controlsHTML + viewModeHTML + editModeHTML;
+        sub.innerHTML = viewModeHTML + editModeHTML + controlsHTML;
         container.appendChild(sub);
     });
 
     // Add button behavior after rendering
-    document.querySelectorAll(".edit-summary-btn").forEach(btn => {
+    document.querySelectorAll(".edit-save-summary-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const index = btn.getAttribute("data-index");
             const container = document.getElementById(`matter-summary-${parseInt(index) + 1}`);
-            container.querySelector(".view-mode").style.display = "none";
-            container.querySelector(".edit-mode").style.display = "block";
+    
+            const viewMode = container.querySelector(".view-mode");
+            const editMode = container.querySelector(".edit-mode");
+    
+            const isEditing = editMode.style.display !== "none";
+    
+            if (isEditing) {
+                // Save logic here (optional: sync edits to backend or internal state)
+                viewMode.style.display = "flex";
+                editMode.style.display = "none";
+                btn.innerText = "Edit";
+            } else {
+                viewMode.style.display = "none";
+                editMode.style.display = "flex";
+                btn.innerText = "Save";
+            }
         });
     });
+    
 
     document.querySelectorAll(".delete-summary-btn").forEach(btn => {
         btn.addEventListener("click", () => {
