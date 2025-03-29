@@ -7,6 +7,7 @@ let client_options = [];
 let matter_options = [];
 
 window.addEventListener("DOMContentLoaded", () => {
+    
     Promise.all([
         fetch(`${app_url}/get-client-map`).then(res => res.json()),
         fetch(`${app_url}/get-matter-map`).then(res => res.json())
@@ -25,6 +26,15 @@ window.addEventListener("DOMContentLoaded", () => {
     .catch(err => {
         console.error("Error loading client/matter maps:", err);
     });
+
+    fetch(`${app_url}/fetch-latest-summaries`, { method: "GET" })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Data retrieved:", data);
+        renderSummaries(data);
+    })
+    .catch(err => console.error("Error retrieving data:", err));
+
 });
 
 update_logs_btn.addEventListener("click", () => {
