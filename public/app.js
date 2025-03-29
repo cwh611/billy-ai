@@ -106,8 +106,8 @@ function renderSummaries(summaries) {
 
         const controlsHTML = `
             <div class="summary-controls">
-                <button class="edit-save-summary-btn" data-index="${index}">Edit</button>
-                <button class="delete-summary-btn" data-index="${index}">Delete</button>
+                <button class="edit-save-summary-btn summary-control-btn" data-index="${index}">Edit</button>
+                <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
             </div>
         `;
 
