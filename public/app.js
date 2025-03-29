@@ -47,7 +47,7 @@ function renderSummaries(summaries) {
         sub.id = `matter-summary-${index + 1}`;
 
         const viewModeHTML = `
-            <div class="view-mode">
+            <div class="view-mode matter-summary">
                 <div class="summary-header-container">
                     <div class="client-name-number-container">
                         <span class="client-name">${entry.client_name}</span>
@@ -73,7 +73,7 @@ function renderSummaries(summaries) {
         `;
 
         const editModeHTML = `
-            <div class="edit-mode" style="display: none;">
+            <div class="edit-mode matter-summary" style="display: none;">
                 <div class="summary-header-container">
                     <select class="client-select">
                         ${client_options.map(opt => `
@@ -99,8 +99,8 @@ function renderSummaries(summaries) {
 
         const controlsHTML = `
             <div class="summary-controls">
-                <button class="edit-summary-btn" data-index="${index}">✏️ Edit</button>
-                <button class="delete-summary-btn" data-index="${index}">🗑 Delete</button>
+                <button class="edit-summary-btn" data-index="${index}">Edit</button>
+                <button class="delete-summary-btn" data-index="${index}">Delete</button>
             </div>
         `;
 

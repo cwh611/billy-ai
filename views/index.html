@@ -9,6 +9,32 @@
     <link rel="stylesheet" href="/index.css">
 </head>
 <body>
+    <div id="menu-bar">
+        <div class="menu-item" id="dashboard">
+            Dashboard
+        </div>
+        <div class="menu-item" id="log">
+            Logs
+        </div>
+        <div class="menu-item" id="send-an-invoice">
+            Invoices
+        </div>
+        <div class="menu-item" id="clients">
+            Clients
+        </div>
+        <div class="menu-item" id="matters">
+            Matters
+        </div>
+        <div class="menu-item" id="team">
+            Team
+        </div>
+        <div class="menu-item" id="settings">
+            Settings
+        </div>
+        <div class="menu-item" id="support">
+            Support
+        </div>
+    </div>
     <main>
         <div id="header-div">
             <span id="h1-iris">
@@ -28,43 +54,37 @@
             </div>
             <div id="log-summaries-container">
                 <div class="matter-summary-subcontainer">
-                    <div id="matter-summary-1" class="matter-summary">
+                    <div class="edit-mode matter-summary" style="display: flex">
                         <div class="summary-header-container">
-                            <div class="client-name-number-container">
-                                <span class="client-name">
-                                    Microsoft
-                                </span>
-                                <span class="client-number">
-                                    (4211)
-                                </span>
-                            </div>
-                            <div class="matter-descr-number-container">
-                                <span class="matter-descr">
-                                    Derivative Securities Litigation
-                                </span>
-                                <span class="matter-number">
-                                    (488)
-                                </span>
-                            </div>
+                            <select class="client-select">
+                                <option value="Microsoft (4211)">
+                                    Microsoft (4211)
+                                </option>
+                            </select>
+                            <select class="matter-select">`
+                                <option value="Derivative Securities Litigation (488)">
+                                    Derivative Securities Litigation (488)
+                                </option>
+                            </select>
                         </div>
-                        <div class="matter-summary-content-container">
+                        <div contenteditable="true" class="matter-summary-content-container">
                             <ul class="matter-summary-ul">
                                 <li id="matter-1-summary-content-li-1" class="matter-summary-content-li">
-                                    Conducted legal research on securities law and misrepresentation, including reviewing relevant U.S. Code sections and legal articles.
+                                    Reviewed plaintiff deposition transcript.
                                 </li>
                                 <li id="matter-1-summary-content-li-2" class="matter-summary-content-li">
-                                    Drafted and reviewed motion for summary judgment and deposition transcripts related to the litigation.
+                                    Drafted and edited motion for summary judgment.
                                 </li>
                             </ul>
                         </div>
                         <div class="matter-summary-time-billed">
-                            <span class="time-billed-label">
-                                Total time billed:
-                            </span>
-                            <span class="time-billed-number">
-                                3 hours, 4 mimutes.
-                            </span>
+                            <span class="time-billed-label">Total time billed:</span>
+                            <span contenteditable="true" class="time-billed-number">6 hours, 13 minutes.</span>
                         </div>
+                    </div>
+                    <div class="summary-controls">
+                        <button class="save-summary-btn summary-control-btn" data-index="${index}">Save</button>
+                        <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
                     </div>
                 </div>
                 <div class="matter-summary-subcontainer">
@@ -79,21 +99,25 @@
                                 </span>
                             </div>
                             <div class="matter-descr-number-container">
-                                <span class="matter-descr">
-                                    Splunk Acquisition
-                                </span>
-                                <span class="matter-number">
-                                    (011)
-                                </span>
+                                <div class="matter-descr-number-subcontainer">
+                                    <span class="matter-descr">
+                                        Splunk Acquisition
+                                    </span>
+                                    <span class="matter-number">
+                                        (011)
+                                    </span>
+                                </div>  
                             </div>
                         </div>
-                        <div class="matter-summary-content-container">
+                        <div contenteditable="true" class="matter-summary-content-container">
                             <ul class="matter-summary-ul">
                                 <li id="matter-2-summary-content-li-1" class="matter-summary-content-li">
                                     Reviewed and edited stock purchase agreement and sponsor side letter.
                                 </li>
                                 <li id="matter-2-summary-content-li-2" class="matter-summary-content-li">
                                     Attended client conference call with M&A and tax teams.
+                                </li>
+
                                 </li>
                             </ul>
                         </div>
@@ -106,10 +130,14 @@
                             </span>
                         </div>
                     </div>
+                    <div class="summary-controls">
+                        <button class="edit-summary-btn summary-control-btn" data-index="${index}">Edit</button>
+                        <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
+                    </div>
                 </div>
             </div>
             <div id="bottom-btns">
-                <button type="button" id="update-logs-btn">Update logs</button>
+                <button type="button" id="update-logs-btn">Sync logs</button>
                 <button type="button" id="review-logs-btn">Review logs</button>
                 </div>
             </div>

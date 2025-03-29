@@ -8,11 +8,40 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
+    display: flex;
+}
+
+#menu-bar {
+    width: 15%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FAFAF5;
+    font-family: "Alfa Slab One", serif;
+    font-size: 16px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px
+}
+
+.menu-item {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid black;
+}
+
+#support {
+    border-bottom: 1px solid black
 }
 
 main {
     height: 100%;
-    width: 100%;
+    width: 85%;
     margin: 0;
     padding: 0;
     display: flex;
@@ -27,16 +56,20 @@ main {
     justify-content: center;
     font-family: "Alfa Slab One", serif;
     font-size: 30px;
-    align-items: center;
-    height: 10%
+    height: 10%;
+    align-items: end
 }
 
 #h1-iris {
-    color: #BB0095
+    color: #8775FF
+}
+
+#h1-ai {
+    color: rgba(0, 0, 0, 0.8)
 }
 
 #main-container {
-    height: 100%;
+    height: 90%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -47,42 +80,44 @@ main {
 #todays-activity {
     font-family: "Alfa Slab One", serif;
     font-size: 18px;
+    color: rgba(0, 0, 0, 0.8)
 }
 
 #update-logs-btn, #review-logs-btn, #summary-btn, #detail-btn {
-    background-color: #BB00959E;
-    font-size: 18px;
+    background-color: #8775FF;
+    font-size: 16px;
     color: #FAFAF5;
     font-family: "Alfa Slab One", serif;
     border: 0px;
     border-radius: 30px;
-    width: 200px;
-    height: 50px
+    width: 150px;
+    height: 40px;
 }
 
 #log-summaries-container {
     display: flex;
     justify-content: space-evenly;
-    height: 300px;
     width: 60%;
     font-family: "Anuphan", serif;
     font-size: 14px
 }
 
 .matter-summary-subcontainer {
-    height: 100%;
+    height: 300px;
     width: 40%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     background-color: #FAFAF5;
-    border-radius: 30px
+    color: black;
+    border-radius: 30px;
+
 }
 
 .matter-summary {
-    height: 80%;
-    width: 80%;
+    height: 90%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -96,11 +131,35 @@ main {
     font-weight: 250
 }
 
-.matter-summary-content-container {
-    height: 100%;
+.client-name-number-container, .matter-descr-number-container {
+    margin-left: 20px;
+    margin-right: 20px
+}
+
+.summary-header-container {
+    height: 20%;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start
+    justify-content: center;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    color: #FAFAF5;
+    font-size: 14px
+
+}
+
+.matter-summary-content-container {
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+    padding-top: 10px;
+    border-radius: 30px;
+    padding-right: 20px;
+
 }
 
 .matter-summary-ul {
@@ -110,12 +169,63 @@ main {
     justify-content: flex-start
 }
 
+.summary-controls {
+    display: flex;
+    width: 100%;
+    height: 10%
+}
+
+.summary-control-btn {
+    width: 100%;
+}
+
+.edit-summary-btn, .save-summary-btn {
+    border-bottom-left-radius: 30px;
+    border: 0px;
+    font-family: "Alfa Slab One", serif;
+    font-size: 14px;
+    background-color: #ECECEC;
+    color: rgba(0, 0, 0, 0.8)
+}
+
+.delete-summary-btn {
+    border-bottom-right-radius: 30px;
+    border: 0px;
+    font-family: "Alfa Slab One", serif;
+    font-size: 14px;
+    background-color: #FF7878;
+    color: rgba(0, 0, 0, 0.8);
+}
+
 #log-type-btns, #bottom-btns {
     width: 40%;
     display: flex;
     justify-content: space-evenly
 }
 
+.matter-summary-time-billed {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.25);
+    height: 50px
+}
+
 .time-billed-label {
     font-weight: bold
+}
+
+select {
+    font-family: "Anuphan", serif;
+    border-radius: 30px;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #FAFAF5;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 0px;
+}
+
+li {
+    padding-bottom: 10px;
+    padding-left: 10px
 }
