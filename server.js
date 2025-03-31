@@ -77,12 +77,12 @@ app.post('/upload-log', upload.fields([
       
       const insertQuery = `
         INSERT INTO activity_logs (
-          id, timestamp, app, window, duration_seconds
+          id, timestamp, app, "window", duration_seconds
         ) VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (id) DO UPDATE SET
           timestamp = EXCLUDED.timestamp,
           app = EXCLUDED.app,
-          window = EXCLUDED.window,
+          "window" = EXCLUDED."window",
           duration_seconds = EXCLUDED.duration_seconds
       `;
       
