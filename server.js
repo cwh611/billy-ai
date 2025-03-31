@@ -76,7 +76,7 @@ app.post('/upload-log', upload.fields([
       await client.query('BEGIN');
       
       const insertQuery = `
-        INSERT INTO activity_logs (
+        INSERT INTO activity_log (
           id, timestamp, app, "window", duration_seconds
         ) VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (id) DO UPDATE SET
@@ -100,7 +100,7 @@ app.post('/upload-log', upload.fields([
       // Commit transaction
       await client.query('COMMIT');
       
-      res.send(`✅ Activity logs successfully copied to server and database. ${logData.logs.length} entries processed.`);
+      res.send(`✅ Activity log successfully copied to server and database. ${logData.logs.length} entries processed.`);
 
       try {
         // Run the Python script to generate billing statement
