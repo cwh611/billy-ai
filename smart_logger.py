@@ -107,10 +107,9 @@ def log_active_windows(interval=5):
 
                     # Add to JSON logs
                     log_entry = {
-                        "id": len(logs_data["logs"]) + 1,
                         "timestamp": timestamp,
                         "app": last_owner,
-                        "window": last_title,
+                        "window_title": last_title,
                         "duration_seconds": time_spent
                     }
                     logs_data["logs"].append(log_entry)

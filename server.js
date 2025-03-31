@@ -77,22 +77,16 @@ app.post('/upload-log', upload.fields([
       
       const insertQuery = `
         INSERT INTO activity_log (
-          id, timestamp, app, "window", duration_seconds
-        ) VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (id) DO UPDATE SET
-          timestamp = EXCLUDED.timestamp,
-          app = EXCLUDED.app,
-          "window" = EXCLUDED."window",
-          duration_seconds = EXCLUDED.duration_seconds
+          timestamp, app, window_title, duration_seconds
+        ) VALUES ($1, $2, $3, $4)
       `;
       
       // Insert each log entry
       for (const entry of logData.logs) {
         await client.query(insertQuery, [
-          entry.id,
           entry.timestamp,
           entry.app,
-          entry.window,
+          entry.window_title,
           entry.duration_seconds
         ]);
       }
