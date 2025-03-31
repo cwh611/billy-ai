@@ -113,8 +113,12 @@ function render_tasks(tasks) {
               </div>
               <div contenteditable="true" class="matter-summary-content-container">
                 <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-edit">
-                  <li class="matter-summary-content-li" contenteditable="true">
-                    ${task.task_descr} ${formatTimeBilled(task.time_billed)}
+                  <li class="matter-summary-content-li">
+                    <span contenteditable="true" id="task-${task.id}-descr">${task.task_descr}</span>
+                    <span id="task-${task.id}-time-billed">
+                        <input type="number" class="time-billed-hours" id="task-${task.id}-hours" min="0" step="1" placeholder="0" value="${Math.floor(task.time_billed / 60)}" style="width: 50px;"> hours,
+                        <input type="number" class="time-billed-minutes" id="task-${task.id}-minutes" min="0" max="59.9" step="0.1" placeholder="0.0" value="${(task.time_billed % 60).toFixed(1)}" style="width: 60px;"> minutes
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -203,7 +207,48 @@ function render_tasks(tasks) {
             const isEditing = editMode.style.display !== "none";
     
             if (isEditing) {
-                // Save logic here (optional: sync edits to backend or internal state)
+                const taskItems = container.querySelectorAll(".matter-summary-content-li");
+                const updates = [];
+            
+                taskItems.forEach(item => {
+                    const taskId = item.querySelector("span[id^='task-'][id$='-descr']").id.split("-")[1];
+            
+                    const descrSpan = document.getElementById(`task-${taskId}-descr`);
+                    const hoursInput = document.getElementById(`task-${taskId}-hours`);
+                    const minutesInput = document.getElementById(`task-${taskId}-minutes`);
+            
+                    const newDescr = descrSpan.textContent.trim();
+                    const hours = parseInt(hoursInput.value) || 0;
+                    const minutes = parseFloat(minutesInput.value) || 0;
+                    const totalMinutes = parseFloat((hours * 60 + minutes).toFixed(1));
+            
+                    const clientSelect = container.querySelector(`#client-select-${index}`);
+                    const matterSelect = container.querySelector(`#matter-select-${index}`);
+            
+                    updates.push({
+                        id: taskId,
+                        task_descr: newDescr,
+                        time_billed: totalMinutes,
+                        client_number: clientSelect.value,
+                        matter_number: matterSelect.value
+                    });
+                });
+            
+                // Send batch updates to backend
+                fetch(`${app_url}/update-tasks`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ updates })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Batch update response:", data);
+                    // Optional: re-fetch or re-render updated UI
+                })
+                .catch(err => console.error("Error updating tasks:", err));
+            
                 viewMode.style.display = "flex";
                 editMode.style.display = "none";
                 btn.innerText = "Edit";

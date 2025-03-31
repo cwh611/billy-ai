@@ -198,6 +198,36 @@ app.get('/get-matter-map', async (req, res) => {
   }
 });
 
+app.patch("/update-tasks", async (req, res) => {
+  const { updates } = req.body;
+
+  if (!Array.isArray(updates)) {
+      return res.status(400).json({ error: "Invalid format" });
+  }
+
+  try {
+      const client = await pool.connect(); 
+
+      for (const task of updates) {
+          await client.query(
+              `UPDATE tasks
+               SET task_descr = $1,
+                   time_billed = $2,
+                   client_number = $3,
+                   matter_number = $4
+               WHERE id = $5`,
+              [task.task_descr, task.time_billed, task.client_number, task.matter_number, task.id]
+          );
+      }
+
+      client.release();
+      res.json({ success: true, updated_count: updates.length });
+  } catch (err) {
+      console.error("Error updating tasks:", err);
+      res.status(500).json({ error: "Failed to update tasks" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
