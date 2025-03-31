@@ -94,16 +94,14 @@ app.post('/upload-log', upload.fields([{ name: 'logfile', maxCount: 1 }]), async
     try {
       await client2.query('BEGIN');
       const insertTaskQuery = `
-        INSERT INTO tasks (task_descr, client_name, client_number, matter_number, matter_descr, time_billed, date)
+        INSERT INTO tasks (task_descr, client_number, matter_number, time_billed, date)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
       `;
       for (const task of parsed_tasks) {
         await client2.query(insertTaskQuery, [
           task.task_descr,
-          task.client_name,
           task.client_number,
           task.matter_number,
-          task.matter_descr,
           task.time_billed,
           task.date
         ]);
@@ -131,7 +129,7 @@ app.get('/fetch-latest-task-logs', async (req, res) => {
     const client = await pool.connect();
     
     const query = `
-      SELECT task_descr, client_number, client_name, matter_number, matter_descr, time_billed, date
+      SELECT task_descr, client_number, matter_number, time_billed, date
       FROM tasks
       ORDER BY created_at DESC
       LIMIT 50
@@ -143,9 +141,7 @@ app.get('/fetch-latest-task-logs', async (req, res) => {
     const summaries = result.rows.map(row => ({
       task_descr: row.task_descr,
       client_number: row.client_number,
-      client_name: row.client_name,
       matter_number: row.matter_number,
-      matter_descr: row.matter_descr, 
       time_billed: row.time_billed,
       date: row.date
     }));

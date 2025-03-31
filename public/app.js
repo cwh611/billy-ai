@@ -59,16 +59,22 @@ function render_tasks(tasks) {
             const sub = document.createElement("div");
             sub.className = "matter-summary-subcontainer";
             sub.id = `matter-summary-${index + 1}`;
-    
+            
+            const matter_options_index = matter_options.findIndex(matter => matter.number === task.matter_number)
+            const task_matter_descr = matter_options[matter_options_index].descr
+
+            const client_options_index = client_options.findIndex(client => client.number === task.client_number)
+            const task_client_name = client_options[client_options_index].name
+
             const viewModeHTML = `
                 <div class="view-mode matter-summary">
                     <div class="summary-header-container">
                         <div class="client-name-number-container">
-                            <span class="client-name">${task.client_name}</span>
+                            <span class="client-name">${task_client_name}</span>
                             <span class="client-number">(${task.client_number})</span>
                         </div>
                         <div class="matter-descr-number-container">
-                            <span class="matter-descr">${task.matter_descr}</span>
+                            <span class="matter-descr">${task_matter_descr}</span>
                             <span class="matter-number">(${task.matter_number})</span>
                         </div>
                     </div>

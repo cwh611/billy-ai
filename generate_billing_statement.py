@@ -40,7 +40,7 @@ def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=1000):
                     "You are a billing assistant for a corporate law firm. "
                     "Given logs of activity and a list of client matters, generate a JSON object "
                     "for each discrete task worked on. Your response MUST be a valid JSON array. "
-                    "Each task object should contain: client_name, client_number, matter_number, matter_descr, "
+                    "Each task object should contain: client_number, matter_number, "
                     "task_descr (concise text description of the task in professional legal billing language), "
                     "time_billed (in minutes, one decimal place), and date."
                 )
@@ -147,10 +147,8 @@ def build_gpt_prompt(date_to_analyze):
         'Return ONLY valid JSON in this format:\n\n'
         '[\n'
         '  {\n'
-        '    "client_name": "Google",\n'
         '    "client_number": "3467",\n'
         '    "matter_number": "235",\n'
-        '    "matter_descr": "Google Antitrust Investigation",\n'
         '    "task_descr": "Drafted motion for summary judgment sections I–III.",\n'
         '    "time_billed": 125.3,\n'
         '    "date": "2025-03-30"'
