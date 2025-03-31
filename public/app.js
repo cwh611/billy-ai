@@ -94,16 +94,16 @@ function render_tasks(tasks) {
             const editModeHTML = `
             <div class="edit-mode matter-summary" style="display: none;">
               <div class="summary-header-container">
-                <select class="client-select">
+                <select class="client-select" id="client-select-${index}" data-index="${index}">
                   ${client_options.map(opt => `
                     <option value="${opt.number}" ${opt.number === task.client_number ? "selected" : ""}>
                       ${opt.name} (${opt.number})
                     </option>
                   `).join("")}
                 </select>
-                <select class="matter-select">
+                <select class="matter-select" id="matter-select-${index}">
                   ${matter_options
-                    .filter(opt => opt.client_number === task.client_number)
+                    .filter(opt => String(opt.client_number) === String(task.client_number))
                     .map(opt => `
                       <option value="${opt.number}" ${opt.number === task.matter_number ? "selected" : ""}>
                         ${opt.descr} (${opt.number})
@@ -113,7 +113,9 @@ function render_tasks(tasks) {
               </div>
               <div contenteditable="true" class="matter-summary-content-container">
                 <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-edit">
-                  <li class="matter-summary-content-li" contenteditable="true">${task.task_descr} ${formatTimeBilled(task.time_billed)}</li>
+                  <li class="matter-summary-content-li" contenteditable="true">
+                    ${task.task_descr} ${formatTimeBilled(task.time_billed)}
+                  </li>
                 </ul>
               </div>
               <div class="matter-summary-time-billed">
@@ -121,7 +123,7 @@ function render_tasks(tasks) {
                 <span contenteditable="true" class="time-billed-number" id="matter-${task.matter_number}-total-time-billed-edit"></span>
               </div>
             </div>
-          `;          
+          `;                
     
             const controlsHTML = `
                 <div class="summary-controls">
@@ -140,6 +142,25 @@ function render_tasks(tasks) {
         } else {
             console.log("Client unable to handle matter_numbers_worked_on matching")
         }
+
+        document.querySelectorAll(".client-select").forEach(clientSelect => {
+            clientSelect.addEventListener("change", (e) => {
+              const index = clientSelect.dataset.index;
+              const selectedClient = clientSelect.value;
+          
+              const matterSelect = document.getElementById(`matter-select-${index}`);
+              matterSelect.innerHTML = "";
+          
+              const relevantMatters = matter_options.filter(opt => String(opt.client_number) === String(selectedClient));
+              
+              relevantMatters.forEach(opt => {
+                const option = document.createElement("option");
+                option.value = opt.number;
+                option.textContent = `${opt.descr} (${opt.number})`;
+                matterSelect.appendChild(option);
+              });
+            });
+          });          
 
     });
 
