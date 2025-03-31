@@ -177,7 +177,7 @@ app.get('/get-client-map', async (req, res) => {
 app.get('/get-matter-map', async (req, res) => {
   try {
     const client = await pool.connect();
-    const query = `SELECT DISTINCT matter_number, matter_descr FROM matters`;
+    const query = `SELECT DISTINCT matter_number, matter_descr, client_number FROM matters`;
     
     const result = await client.query(query);
     client.release();

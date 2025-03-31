@@ -18,9 +18,10 @@ window.addEventListener("DOMContentLoaded", () => {
             name
         }));
 
-        matter_options = Object.entries(matterMap).map(([number, descr]) => ({
+        matter_options = Object.entries(matterMap).map(([number, descr, client_number]) => ({
             number,
-            descr
+            descr,
+            client_number
         }));
     })
     .catch(err => {
@@ -80,7 +81,7 @@ function render_tasks(tasks) {
                     </div>
                     <div class="matter-summary-content-container">
                         <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-view">
-                            <li>${task.task_descr} ${task.time_billed}</li>
+                            <li>${task.task_descr} ${formatTimeBilled(task.time_billed)}.</li>
                         </ul>
                     </div>
                     <div class="matter-summary-time-billed">
@@ -91,34 +92,36 @@ function render_tasks(tasks) {
             `;
     
             const editModeHTML = `
-                <div class="edit-mode matter-summary" style="display: none;">
-                    <div class="summary-header-container">
-                        <select class="client-select">
-                            ${client_options.map(opt => `
-                                <option value="${opt.number}" ${opt.number === task.client_number ? "selected" : ""}>
-                                    ${opt.name} (${opt.number})
-                                </option>
-                            `).join("")}
-                        </select>
-                        <select class="matter-select">
-                            ${matter_options.map(opt => `
-                                <option value="${opt.number}" ${opt.number === task.matter_number ? "selected" : ""}>
-                                    ${opt.descr} (${opt.number})
-                                </option>
-                            `).join("")}
-                        </select>
-                    </div>
-                    <div contenteditable="true" class="matter-summary-content-container">
-                        <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-edit">
-                            <li class="matter-summary-content-li" contenteditable="true">${task.task_descr} ${task.time_billed}</li>
-                        </ul>
-                    </div>
-                    <div class="matter-summary-time-billed">
-                        <span class="time-billed-label">Total time billed:</span>
-                        <span contenteditable="true" class="time-billed-number" id="matter-${task.matter_number}-total-time-billed-edit"></span>
-                    </div>
-                </div>
-            `;
+            <div class="edit-mode matter-summary" style="display: none;">
+              <div class="summary-header-container">
+                <select class="client-select">
+                  ${client_options.map(opt => `
+                    <option value="${opt.number}" ${opt.number === task.client_number ? "selected" : ""}>
+                      ${opt.name} (${opt.number})
+                    </option>
+                  `).join("")}
+                </select>
+                <select class="matter-select">
+                  ${matter_options
+                    .filter(opt => opt.client_number === task.client_number)
+                    .map(opt => `
+                      <option value="${opt.number}" ${opt.number === task.matter_number ? "selected" : ""}>
+                        ${opt.descr} (${opt.number})
+                      </option>
+                    `).join("")}
+                </select>
+              </div>
+              <div contenteditable="true" class="matter-summary-content-container">
+                <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-edit">
+                  <li class="matter-summary-content-li" contenteditable="true">${task.task_descr} ${formatTimeBilled(task.time_billed)}</li>
+                </ul>
+              </div>
+              <div class="matter-summary-time-billed">
+                <span class="time-billed-label">Total time billed:</span>
+                <span contenteditable="true" class="time-billed-number" id="matter-${task.matter_number}-total-time-billed-edit"></span>
+              </div>
+            </div>
+          `;          
     
             const controlsHTML = `
                 <div class="summary-controls">
@@ -131,9 +134,9 @@ function render_tasks(tasks) {
             container.appendChild(sub);
         } else if (matter_numbers_worked_on.includes(task.matter_number)) {
             document.getElementById(`matter-${task.matter_number}-summary-ul-view`).innerHTML += 
-                `<li class="matter-summary-content-li">${task.task_descr} ${task.time_billed}</li>`;
+                `<li class="matter-summary-content-li">${task.task_descr} ${formatTimeBilled(task.time_billed)}</li>`;
             document.getElementById(`matter-${task.matter_number}-summary-ul-edit`).innerHTML += 
-                `<li class="matter-summary-content-li">${task.task_descr} ${task.time_billed}</li>`;
+                `<li class="matter-summary-content-li">${task.task_descr} ${formatTimeBilled(task.time_billed)}</li>`;
         } else {
             console.log("Client unable to handle matter_numbers_worked_on matching")
         }
