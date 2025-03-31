@@ -18,9 +18,9 @@ const pool = new Pool({
 
 let loggerProcess = null;
 
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
@@ -201,6 +201,13 @@ app.get('/get-matter-map', async (req, res) => {
 });
 
 app.patch("/update-tasks", async (req, res) => {
+  console.log("req.headers:", req.headers);
+  console.log("req.body raw?", req.body);
+  
+  if (!req.body) {
+    return res.status(400).json({ error: "No body received" });
+  }
+  
   const { updates } = req.body;
 
   if (!Array.isArray(updates)) {

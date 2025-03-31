@@ -216,6 +216,8 @@ function render_tasks(tasks) {
                     });
                 });
 
+                console.log("Sending updates:", updates);
+
                 fetch(`${app_url}/update-tasks`, {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
