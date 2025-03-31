@@ -47,41 +47,22 @@ app.post('/start-logger', (req, res) => {
   res.send('Logger started.');
 });
 
-app.post('/upload-log', upload.fields([
-  { name: 'logfile', maxCount: 1 },
-]), async (req, res) => {
+// Upload handler
+app.post('/upload-log', upload.fields([{ name: 'logfile', maxCount: 1 }]), async (req, res) => {
+  const logFile = req.files['logfile']?.[0]?.path;
+  if (!logFile) return res.status(400).send("Missing json file.");
+
   try {
-    const logFile = req.files['logfile']?.[0]?.path;
-
-    if (!logFile) {
-      return res.status(400).send("Missing json file.");
-    }
-
-    // Copy uploaded file to server
-    await fsPromises.copyFile(logFile, path.join(__dirname, 'activity_logs.json'));
-    
-    // Read the copied JSON file
     const logFilePath = path.join(__dirname, 'activity_logs.json');
+    await fsPromises.copyFile(logFile, logFilePath);
     const logData = JSON.parse(await fsPromises.readFile(logFilePath, 'utf-8'));
-    
-    if (!logData.logs || !Array.isArray(logData.logs) || logData.logs.length === 0) {
-      return res.status(400).send("Invalid or empty log file format.");
-    }
-    
-    // Connect to database
+
+    if (!logData.logs?.length) return res.status(400).send("Invalid or empty log file format.");
+
     const client = await pool.connect();
-    
     try {
-      // Begin transaction
       await client.query('BEGIN');
-      
-      const insertQuery = `
-        INSERT INTO activity_log (
-          timestamp, app, window_title, duration
-        ) VALUES ($1, $2, $3, $4)
-      `;
-      
-      // Insert each log entry
+      const insertQuery = `INSERT INTO activity_log (timestamp, app, window_title, duration) VALUES ($1, $2, $3, $4)`;
       for (const entry of logData.logs) {
         await client.query(insertQuery, [
           entry.timestamp,
@@ -90,84 +71,58 @@ app.post('/upload-log', upload.fields([
           entry.duration_seconds
         ]);
       }
-      
-      // Commit transaction
       await client.query('COMMIT');
-      
-      res.send(`✅ Activity log successfully copied to server and database. ${logData.logs.length} entries processed.`);
-
-      try {
-        // Run the Python script to generate billing statement
-        const { stdout, stderr } = await new Promise((resolve, reject) => {
-          exec('python3 generate_billing_statement.py', (error, stdout, stderr) => {
-            if (error) {
-              reject(error);
-              return;
-            }
-            resolve({ stdout, stderr });
-          });
-        });
-    
-        if (stderr) {
-          console.error(`Summary stderr: ${stderr}`);
-        }
-    
-        console.log('Billing summary generated.');
-        
-        const parsed_tasks = JSON.parse(stdout);
-    
-        // Insert into PostgreSQL
-        const client = await pool.connect();
-        
-        try {
-          // Begin transaction
-          await client.query('BEGIN');
-          
-          const insertQuery = `
-            INSERT INTO tasks (
-              task_descr, client_name, client_number, matter_number, matter_descr, time_billed, date
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-          `;
-          
-          for (const entry of parsed_tasks) {
-            await client.query(insertQuery, [
-              entry.task_descr,
-              entry.client_name,
-              entry.client_number,
-              entry.matter_number,
-              entry.matter_descr,
-              entry.time_billed,
-              entry.date
-            ]);
-          }
-          
-          // Commit transaction
-          await client.query('COMMIT');
-          
-          res.type('text/plain').send(stdout);
-        } catch (dbError) {
-          // Rollback in case of error
-          await client.query('ROLLBACK');
-          console.error("❌ Error inserting into database:", dbError);
-          res.status(500).send(`Database operation failed: ${dbError.message}`);
-        } finally {
-          client.release();
-        }
-      } catch (error) {
-        console.error(`Error generating summary: ${error}`);
-        res.status(500).send(`Summary generation failed: ${error.message}`);
-      }
-    } catch (dbError) {
-      // Rollback in case of error
+    } catch (err) {
       await client.query('ROLLBACK');
-      console.error("❌ Error inserting logs into database:", dbError);
-      res.status(500).send(`Database operation failed: ${dbError.message}`);
+      throw new Error("Failed to insert logs: " + err.message);
     } finally {
       client.release();
     }
+
+    // 🔥 Only run this *after* logs successfully inserted
+    const { stdout } = await new Promise((resolve, reject) => {
+      exec('python3 generate_billing_statement.py', (error, stdout, stderr) => {
+        if (error) return reject(error);
+        if (stderr) console.error(`Summary stderr: ${stderr}`);
+        resolve({ stdout });
+      });
+    });
+
+    const parsed_tasks = JSON.parse(stdout);
+
+    const client2 = await pool.connect();
+    try {
+      await client2.query('BEGIN');
+      const insertTaskQuery = `
+        INSERT INTO tasks (task_descr, client_name, client_number, matter_number, matter_descr, time_billed, date)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `;
+      for (const task of parsed_tasks) {
+        await client2.query(insertTaskQuery, [
+          task.task_descr,
+          task.client_name,
+          task.client_number,
+          task.matter_number,
+          task.matter_descr,
+          task.time_billed,
+          task.date
+        ]);
+      }
+      await client2.query('COMMIT');
+    } catch (err) {
+      await client2.query('ROLLBACK');
+      throw new Error("Failed to insert tasks: " + err.message);
+    } finally {
+      client2.release();
+    }
+
+    res.type('text/plain').send(stdout);
+
   } catch (err) {
-    console.error("❌ Error processing uploaded files:", err);
-    res.status(500).send("Error processing files: " + err.message);
+    console.error("❌ Upload error:", err);
+    if (!res.headersSent) {
+      res.status(500).send("Server error: " + err.message);
+    }
   }
 });
 

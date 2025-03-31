@@ -80,7 +80,7 @@ def load_logs_for_day(target_date):
             "timestamp": str(ts),
             "app": app,
             "window": window,
-            "duration_min": round(duration / 60, 1)
+            "duration_min": round(float(duration) / 60, 1)
         })
     return logs
 
