@@ -47,69 +47,6 @@ app.post('/start-logger', (req, res) => {
   res.send('Logger started.');
 });
 
-app.post('/stop-logger', async (req, res) => {
-  try {
-    // Run the Python script to generate billing statement
-    const { stdout, stderr } = await new Promise((resolve, reject) => {
-      exec('python3 generate_billing_statement.py', (error, stdout, stderr) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve({ stdout, stderr });
-      });
-    });
-
-    if (stderr) {
-      console.error(`Summary stderr: ${stderr}`);
-    }
-
-    console.log('Billing summary generated.');
-    
-    const parsedSummaries = JSON.parse(stdout);
-
-    // Insert into PostgreSQL
-    const client = await pool.connect();
-    
-    try {
-      // Begin transaction
-      await client.query('BEGIN');
-      
-      const insertQuery = `
-        INSERT INTO billing_summary (
-          client_name, client_number, matter_number, matter_descr, work_summary, time_billed
-        ) VALUES ($1, $2, $3, $4, $5, $6)
-      `;
-      
-      for (const entry of parsedSummaries) {
-        await client.query(insertQuery, [
-          entry.client_name,
-          entry.client_number,
-          entry.matter_number,
-          entry.matter_descr,
-          JSON.stringify(entry.work_summary), // stringify array
-          entry.time_billed
-        ]);
-      }
-      
-      // Commit transaction
-      await client.query('COMMIT');
-      
-      res.type('text/plain').send(stdout);
-    } catch (dbError) {
-      // Rollback in case of error
-      await client.query('ROLLBACK');
-      console.error("❌ Error inserting into database:", dbError);
-      res.status(500).send(`Database operation failed: ${dbError.message}`);
-    } finally {
-      client.release();
-    }
-  } catch (error) {
-    console.error(`Error generating summary: ${error}`);
-    res.status(500).send(`Summary generation failed: ${error.message}`);
-  }
-});
-
 app.post('/upload-log', upload.fields([
   { name: 'logfile', maxCount: 1 },
 ]), async (req, res) => {
@@ -183,7 +120,7 @@ app.post('/upload-log', upload.fields([
     
         console.log('Billing summary generated.');
         
-        const parsedSummaries = JSON.parse(stdout);
+        const parsed_tasks = JSON.parse(stdout);
     
         // Insert into PostgreSQL
         const client = await pool.connect();
@@ -193,19 +130,20 @@ app.post('/upload-log', upload.fields([
           await client.query('BEGIN');
           
           const insertQuery = `
-            INSERT INTO billing_summary (
-              client_name, client_number, matter_number, matter_descr, work_summary, time_billed
-            ) VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO tasks (
+              task_descr, client_name, client_number, matter_number, matter_descr, time_billed, date
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7)
           `;
           
-          for (const entry of parsedSummaries) {
+          for (const entry of parsed_tasks) {
             await client.query(insertQuery, [
+              entry.task_descr,
               entry.client_name,
               entry.client_number,
               entry.matter_number,
               entry.matter_descr,
-              JSON.stringify(entry.work_summary), // stringify array
-              entry.time_billed
+              entry.time_billed,
+              entry.date
             ]);
           }
           
@@ -244,8 +182,8 @@ app.get('/fetch-latest-summaries', async (req, res) => {
     const client = await pool.connect();
     
     const query = `
-      SELECT client_name, client_number, matter_number, matter_descr, work_summary, time_billed
-      FROM billing_summary
+      SELECT task_descr, client_number, client_name, matter_number, matter_descr, time_billed, date
+      FROM tasks
       ORDER BY created_at DESC
       LIMIT 50
     `;
@@ -254,12 +192,13 @@ app.get('/fetch-latest-summaries', async (req, res) => {
     client.release();
     
     const summaries = result.rows.map(row => ({
-      client_name: row.client_name,
+      task_descr: row.task_descr,
       client_number: row.client_number,
+      client_name: row.client_name,
       matter_number: row.matter_number,
-      matter_descr: row.matter_descr,
-      work_summary: JSON.parse(row.work_summary), // parse stringified array
-      time_billed: row.time_billed
+      matter_descr: row.matter_descr, 
+      time_billed: row.time_billed,
+      date: row.date
     }));
     
     res.json(summaries);

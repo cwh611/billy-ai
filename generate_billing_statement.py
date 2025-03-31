@@ -38,10 +38,11 @@ def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=1000):
                 "role": "system",
                 "content": (
                     "You are a billing assistant for a corporate law firm. "
-                    "Given logs of activity and a list of client matters, generate a billing summary "
-                    "for each matter. Your response MUST be a valid JSON array. "
-                    "Each object should contain: client_name, client_number, matter_number, matter_descr, "
-                    "work_summary (as an array of discrete tasks), and time_billed."
+                    "Given logs of activity and a list of client matters, generate a JSON object "
+                    "for each discrete task worked on. Your response MUST be a valid JSON array. "
+                    "Each task object should contain: client_name, client_number, matter_number, matter_descr, "
+                    "task_descr (concise text description of the task in professional legal billing language), "
+                    "time_billed, and date (UTC)."
                 )
             },
             {
@@ -150,12 +151,9 @@ def build_gpt_prompt(date_to_analyze):
         '    "client_number": "3467",\n'
         '    "matter_number": "235",\n'
         '    "matter_descr": "Google Antitrust Investigation",\n'
-        '    "work_summary": [\n'
-        '      "Reviewed deposition transcript from June 12.",\n'
-        '      "Drafted motion for summary judgment sections I–III.",\n'
-        '      "Conducted case law research related to Sherman Act Section 2."\n'
-        '    ],\n'
+        '    "task_descr": "Drafted motion for summary judgment sections I–III.",\n'
         '    "time_billed": "5 hours, 3 minutes."\n'
+        '    "date": "2025-03-30"'
         '  }\n'
         ']'
     )
@@ -182,7 +180,7 @@ if __name__ == "__main__":
     parsed_json = parse_summary_to_json(response)
 
     if not parsed_json:
-        print("⚠️ No valid summaries generated. Exiting.")
+        print("⚠️ No valid task objects generated. Exiting.")
         sys.exit(1)
 
     print(json.dumps(parsed_json))
