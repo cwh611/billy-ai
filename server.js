@@ -77,7 +77,7 @@ app.post('/upload-log', upload.fields([
       
       const insertQuery = `
         INSERT INTO activity_log (
-          timestamp, app, window_title, duration_seconds
+          timestamp, app, window_title, duration
         ) VALUES ($1, $2, $3, $4)
       `;
       
