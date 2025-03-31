@@ -67,8 +67,8 @@ def load_logs_for_day(target_date):
     conn = get_postgres_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT timestamp, app, window, duration_seconds
-        FROM activity_logs
+        SELECT timestamp, app, window_title, duration
+        FROM activity_log
         ORDER BY timestamp ASC
     """)
     rows = cursor.fetchall()
