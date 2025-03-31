@@ -131,8 +131,6 @@ app.get('/fetch-latest-task-logs', async (req, res) => {
     const query = `
       SELECT task_descr, client_number, matter_number, time_billed, date
       FROM tasks
-      ORDER BY created_at DESC
-      LIMIT 50
     `;
     
     const result = await client.query(query);
