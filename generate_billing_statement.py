@@ -1,5 +1,4 @@
-import csv
-import sqlite3
+import psycopg2
 import datetime
 from collections import defaultdict
 from openai import OpenAI
@@ -8,6 +7,18 @@ from dotenv import load_dotenv
 import sys
 import json
 import re
+from urllib.parse import urlparse
+
+# === Parse DATABASE_URL ===
+def parse_database_url(url):
+    parsed = urlparse(url)
+    return {
+        "dbname": parsed.path.lstrip("/"),
+        "user": parsed.username,
+        "password": parsed.password,
+        "host": parsed.hostname,
+        "port": parsed.port
+    }
 
 # === Handle CLI date override ===
 if len(sys.argv) > 1:
@@ -43,8 +54,16 @@ def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=1000):
     )
     return response.choices[0].message.content
 
-def load_logs_for_day(db_path, target_date):
-    conn = sqlite3.connect(db_path)
+def get_postgres_connection():
+    """Create a connection to PostgreSQL database using DATABASE_URL."""
+    database_url = os.environ.get('DATABASE_URL')
+    if not database_url:
+        raise ValueError("DATABASE_URL not set in environment variables")
+    params = parse_database_url(database_url)
+    return psycopg2.connect(**params)
+
+def load_logs_for_day(target_date):
+    conn = get_postgres_connection()
     cursor = conn.cursor()
     cursor.execute("""
         SELECT timestamp, app, window, duration_seconds
@@ -57,15 +76,15 @@ def load_logs_for_day(db_path, target_date):
     logs = []
     for ts, app, window, duration in rows:
         logs.append({
-            "timestamp": ts,
+            "timestamp": str(ts),
             "app": app,
             "window": window,
             "duration_min": round(duration / 60, 1)
         })
     return logs
 
-def load_client_and_matter_maps(db_path):
-    conn = sqlite3.connect(db_path)
+def load_client_and_matter_maps():
+    conn = get_postgres_connection()
     cursor = conn.cursor()
 
     # Load clients
@@ -106,14 +125,17 @@ def build_client_matter_context(client_map, matter_map):
 def build_activity_log_text(logs):
     lines = ["\nHere is a full-day log of activity:\n"]
     for log in logs:
-        ts = datetime.datetime.strptime(log["timestamp"], "%Y-%m-%d %H:%M:%S")
+        if isinstance(log["timestamp"], str):
+            ts = datetime.datetime.strptime(log["timestamp"], "%Y-%m-%d %H:%M:%S")
+        else:
+            ts = log["timestamp"]
         time_str = ts.strftime("%-I:%M %p")
         lines.append(f"- {time_str} — {log['app']} — {log['window']} — {log['duration_min']} min")
     return "\n".join(lines)
 
-def build_gpt_prompt(db_path, matter_db, date_to_analyze):
-    logs = load_logs_for_day(db_path, date_to_analyze)
-    client_map, matter_map = load_client_and_matter_maps(matter_db)
+def build_gpt_prompt(date_to_analyze):
+    logs = load_logs_for_day(date_to_analyze)
+    client_map, matter_map = load_client_and_matter_maps()
 
     context = build_client_matter_context(client_map, matter_map)
     activity = build_activity_log_text(logs)
@@ -142,7 +164,6 @@ def build_gpt_prompt(db_path, matter_db, date_to_analyze):
 
 def parse_summary_to_json(response):
     cleaned_response = re.sub(r"^```(?:json)?\s*|\s*```$", "", response.strip(), flags=re.IGNORECASE)
-
     try:
         parsed_summary = json.loads(cleaned_response)
     except Exception as e:
@@ -152,34 +173,16 @@ def parse_summary_to_json(response):
         print("\n--- Cleaned Output ---\n")
         print(cleaned_response)
         parsed_summary = []
-
     return parsed_summary
-
 
 # === Run Script ===
 if __name__ == "__main__":
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    db_path = os.path.join(script_dir, "activity_log.db")
-    matter_db = os.path.join(script_dir, "matter_map.db")
-
-    prompt = build_gpt_prompt(db_path, matter_db, date_to_analyze)
-
-    # REMOVE or comment out:
-    # print("\n--- GPT Prompt (Preview) ---\n")
-    # print(prompt[:1000])
-
+    prompt = build_gpt_prompt(date_to_analyze)
     response = send_prompt_to_gpt(prompt)
-
-    # REMOVE or comment out:
-    # print("\n--- Raw GPT Output ---\n")
-    # print(response)
-
     parsed_json = parse_summary_to_json(response)
+
     if not parsed_json:
         print("⚠️ No valid summaries generated. Exiting.")
         sys.exit(1)
 
-    # ✅ This line stays
     print(json.dumps(parsed_json))
-

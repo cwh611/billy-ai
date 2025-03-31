@@ -1,8 +1,7 @@
 import time
 import datetime
-import csv
 import os
-import sqlite3
+import json
 import subprocess
 
 from Quartz import (
@@ -64,73 +63,70 @@ def get_frontmost_app_and_title():
     return owner, title
 
 
-def setup_database():
+def load_json_logs():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(script_dir, "activity_log.db")
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS activity_logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp TEXT,
-            app TEXT,
-            window TEXT,
-            duration_seconds REAL
-        )
-    ''')
-    conn.commit()
-    return conn
+    json_path = os.path.join(script_dir, "activity_logs.json")
+    
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, 'r') as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            print("Error reading JSON file. Creating new log.")
+    
+    # Return empty log structure if file doesn't exist or has errors
+    return {"logs": []}
+
+
+def save_json_logs(logs):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(script_dir, "activity_logs.json")
+    
+    with open(json_path, 'w') as f:
+        json.dump(logs, f, indent=2)
 
 
 def log_active_windows(interval=5):
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    log_file = os.path.join(script_dir, "activity_log.csv")
-    file_exists = os.path.isfile(log_file)
-    db_conn = setup_database()
-    db_cursor = db_conn.cursor()
+    # Load existing JSON logs or create new structure
+    logs_data = load_json_logs()
 
-    with open(log_file, mode='a', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        if not file_exists:
-            writer.writerow(["Timestamp", "App", "Window", "Time (seconds)"])
+    last_owner = None
+    last_title = None
+    start_time = time.time()
 
-        last_owner = None
-        last_title = None
-        start_time = time.time()
+    print("Logging active windows... Press Ctrl+C to stop.\n")
 
-        print("Logging active windows... Press Ctrl+C to stop.\n")
+    try:
+        while True:
+            owner, title = get_frontmost_app_and_title()
+            if (owner, title) != (last_owner, last_title):
+                end_time = time.time()
+                if last_owner:
+                    time_spent = round(end_time - start_time, 2)
+                    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        try:
-            while True:
-                owner, title = get_frontmost_app_and_title()
-                if (owner, title) != (last_owner, last_title):
-                    end_time = time.time()
-                    if last_owner:
-                        time_spent = round(end_time - start_time, 2)
-                        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    # Add to JSON logs
+                    log_entry = {
+                        "id": len(logs_data["logs"]) + 1,
+                        "timestamp": timestamp,
+                        "app": last_owner,
+                        "window": last_title,
+                        "duration_seconds": time_spent
+                    }
+                    logs_data["logs"].append(log_entry)
+                    
+                    # Save JSON file after each entry
+                    save_json_logs(logs_data)
 
-                        # Write to CSV
-                        writer.writerow([timestamp, last_owner, last_title, time_spent])
-                        csvfile.flush()
+                    print(f"{timestamp} | App: {last_owner} | Window: {last_title} | Time: {time_spent} sec")
 
-                        # Write to SQLite
-                        db_cursor.execute('''
-                            INSERT INTO activity_logs (timestamp, app, window, duration_seconds)
-                            VALUES (?, ?, ?, ?)
-                        ''', (timestamp, last_owner, last_title, time_spent))
-                        db_conn.commit()
+                last_owner = owner
+                last_title = title
+                start_time = time.time()
 
-                        print(f"{timestamp} | App: {last_owner} | Window: {last_title} | Time: {time_spent} sec")
-
-                    last_owner = owner
-                    last_title = title
-                    start_time = time.time()
-
-                time.sleep(interval)
-        except KeyboardInterrupt:
-            print("\nStopped logging.")
-        finally:
-            db_conn.close()
+            time.sleep(interval)
+    except KeyboardInterrupt:
+        print("\nStopped logging.")
 
 
 if __name__ == "__main__":

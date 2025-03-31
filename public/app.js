@@ -71,7 +71,7 @@ function renderSummaries(summaries) {
                 <div class="matter-summary-content-container">
                     <ul class="matter-summary-ul">
                         ${entry.work_summary.map(task => `
-                            <li class="matter-summary-content-li" contenteditable="true">${task}</li>
+                            <li class="matter-summary-content-li">${task}</li>
                         `).join("")}
                     </ul>
                 </div>
