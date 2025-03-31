@@ -95,7 +95,7 @@ app.post('/upload-log', upload.fields([{ name: 'logfile', maxCount: 1 }]), async
       await client2.query('BEGIN');
       const insertTaskQuery = `
         INSERT INTO tasks (task_descr, client_number, matter_number, time_billed, date)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        VALUES ($1, $2, $3, $4, $5)
       `;
       for (const task of parsed_tasks) {
         await client2.query(insertTaskQuery, [
