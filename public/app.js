@@ -18,7 +18,7 @@ window.addEventListener("DOMContentLoaded", () => {
             name
         }));
 
-        matter_options = Object.entries(matterMap).map(([number, descr, client_number]) => ({
+        matter_options = Object.entries(matterMap).map(([number, { descr, client_number }]) => ({
             number,
             descr,
             client_number
@@ -81,7 +81,7 @@ function render_tasks(tasks) {
                     </div>
                     <div class="matter-summary-content-container">
                         <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-view">
-                            <li>${task.task_descr} ${formatTimeBilled(task.time_billed)}.</li>
+                            <li>${task.task_descr} ${formatTimeBilled(task.time_billed)}</li>
                         </ul>
                     </div>
                     <div class="matter-summary-time-billed">

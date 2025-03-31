@@ -184,9 +184,12 @@ app.get('/get-matter-map', async (req, res) => {
     
     const matterMap = {};
     result.rows.forEach(row => {
-      matterMap[row.matter_number] = row.matter_descr;
+      matterMap[row.matter_number] = {
+        descr: row.matter_descr,
+        client_number: row.client_number
+      }
     });
-    
+
     console.log(matterMap);
     res.json(matterMap);
   } catch (err) {
