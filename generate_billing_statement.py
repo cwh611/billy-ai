@@ -42,7 +42,7 @@ def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=1000):
                     "for each discrete task worked on. Your response MUST be a valid JSON array. "
                     "Each task object should contain: client_name, client_number, matter_number, matter_descr, "
                     "task_descr (concise text description of the task in professional legal billing language), "
-                    "time_billed, and date (UTC)."
+                    "time_billed (in minutes, one decimal place), and date."
                 )
             },
             {
@@ -152,7 +152,7 @@ def build_gpt_prompt(date_to_analyze):
         '    "matter_number": "235",\n'
         '    "matter_descr": "Google Antitrust Investigation",\n'
         '    "task_descr": "Drafted motion for summary judgment sections I–III.",\n'
-        '    "time_billed": "5 hours, 3 minutes."\n'
+        '    "time_billed": 125.3,\n'
         '    "date": "2025-03-30"'
         '  }\n'
         ']'

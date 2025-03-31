@@ -177,7 +177,7 @@ app.post('/upload-log', upload.fields([
   }
 });
 
-app.get('/fetch-latest-summaries', async (req, res) => {
+app.get('/fetch-latest-task-logs', async (req, res) => {
   try {
     const client = await pool.connect();
     
