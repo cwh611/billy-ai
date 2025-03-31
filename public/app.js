@@ -197,6 +197,7 @@ function render_tasks(tasks) {
                     if (!descrSpan) return;
 
                     const taskId = descrSpan.id.split("-")[1];
+                    console.log("taskId:", taskId);
                     const hoursInput = document.getElementById(`task-${taskId}-hours`);
                     const minutesInput = document.getElementById(`task-${taskId}-minutes`);
                     const clientSelect = container.querySelector(`#client-select-${index}`);
