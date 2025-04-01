@@ -1,3 +1,8 @@
+const app_url = "https://billy-ai-demo-1d85d1d40d53.herokuapp.com";
+
+let client_options = [];
+let matter_options = [];
+
 window.addEventListener("DOMContentLoaded", () => {
     
     Promise.all([
