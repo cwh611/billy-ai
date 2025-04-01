@@ -42,7 +42,7 @@ function render_tasks(tasks) {
     }, {});
 
     // Get the main container
-    const mainContainer = document.getElementById("log-summaries-container");
+    const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = "";
 
     // Sort dates in descending order (most recent first)
@@ -51,7 +51,7 @@ function render_tasks(tasks) {
     // Create a container for each date
     sortedDates.forEach(date => {
         const dateContainer = document.createElement("div");
-        dateContainer.className = "date-container";
+        dateContainer.className = "daily-log-summaries-container";
         
         // Add date header
         const dateHeader = document.createElement("h2");
