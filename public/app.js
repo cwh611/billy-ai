@@ -74,10 +74,10 @@ function render_tasks(tasks) {
                 <li class="matter-summary-content-li" data-task-id="${t.id}">
                   <span contenteditable="true" id="task-${t.id}-descr">${t.task_descr}</span>
                   <span id="task-${t.id}-time-billed">
-                      <input type="number" class="time-billed-hours" id="task-${t.id}-hours" value="${Math.floor(t.time_billed / 60)}" style="width: 50px;"> hours,
-                      <input type="number" class="time-billed-minutes" id="task-${t.id}-minutes" value="${(t.time_billed % 60).toFixed(1)}" style="width: 60px;"> minutes
+                      <input type="number" class="time-billed-hours" id="task-${t.id}-hours" value="${Math.floor(t.time_billed / 60)}"><strong> hours</strong>,
+                      <input type="number" class="time-billed-minutes" id="task-${t.id}-minutes" value="${(t.time_billed % 60).toFixed(1)}"><strong> minutes</strong>.
                   </span>
-                  <button class="delete-task-btn" data-task-id="${t.id}">🗑</button>
+                  <button class="delete-task-btn" data-task-id="${t.id}">Delete</button>
                 </li>
               `).join("");              
 
@@ -127,7 +127,7 @@ function render_tasks(tasks) {
                         <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-edit">
                             ${editListItems}
                         </ul>
-                        <button class="add-task-btn" data-matter-number="${task.matter_number}" data-index="${index}">+ Add Task</button>
+                        <button class="add-task-btn" data-matter-number="${task.matter_number}" data-index="${index}">Add task</button>
                     </div>
                     <div class="matter-summary-time-billed">
                         <span class="time-billed-label">Total time billed:</span>
