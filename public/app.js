@@ -124,10 +124,10 @@ function render_tasks(tasks) {
                         </select>
                     </div>
                     <div class="matter-summary-content-container">
-                        <button class="add-task-btn" data-matter-number="${task.matter_number}" data-index="${index}">+ Add Task</button>
                         <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-edit">
                             ${editListItems}
                         </ul>
+                        <button class="add-task-btn" data-matter-number="${task.matter_number}" data-index="${index}">+ Add Task</button>
                     </div>
                     <div class="matter-summary-time-billed">
                         <span class="time-billed-label">Total time billed:</span>
