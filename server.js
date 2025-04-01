@@ -131,7 +131,7 @@ app.get('/fetch-latest-task-logs', async (req, res) => {
     const client = await pool.connect();
     
     const query = `
-      SELECT task_descr, client_number, matter_number, time_billed, date
+      SELECT id, task_descr, client_number, matter_number, time_billed, date
       FROM tasks
     `;
     
@@ -139,6 +139,7 @@ app.get('/fetch-latest-task-logs', async (req, res) => {
     client.release();
     
     const summaries = result.rows.map(row => ({
+      id: row.id,
       task_descr: row.task_descr,
       client_number: row.client_number,
       matter_number: row.matter_number,
@@ -207,7 +208,7 @@ app.patch("/update-tasks", async (req, res) => {
   if (!req.body) {
     return res.status(400).json({ error: "No body received" });
   }
-  
+
   const { updates } = req.body;
 
   if (!Array.isArray(updates)) {
