@@ -226,7 +226,8 @@ function render_tasks(tasks) {
                             task_descr: newDescr,
                             time_billed: totalMinutes,
                             client_number: clientSelect.value,
-                            matter_number: matterSelect.value
+                            matter_number: matterSelect.value,
+                            date: new Date().toISOString().slice(0, 10)
                         });
                     } else {
                         // Update existing task

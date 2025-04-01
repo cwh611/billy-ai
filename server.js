@@ -250,9 +250,9 @@ app.post("/create-tasks", async (req, res) => {
 
     for (const task of tasks) {
       const result = await pool.query(
-        `INSERT INTO tasks (task_descr, time_billed, client_number, matter_number)
-         VALUES ($1, $2, $3, $4) RETURNING *`,
-        [task.task_descr, task.time_billed, task.client_number, task.matter_number]
+        `INSERT INTO tasks (task_descr, time_billed, client_number, matter_number, date)
+         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        [task.task_descr, task.time_billed, task.client_number, task.matter_number, task.date]
       );
 
       inserted.push(result.rows[0]);
