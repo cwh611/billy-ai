@@ -353,7 +353,7 @@ function render_tasks(tasks) {
             li.className = "matter-summary-content-li";
             li.dataset.taskId = newId;
             li.innerHTML = `
-                <span contenteditable="true" id="task-${newId}-descr">New task</span>
+                <span contenteditable="true" id="task-${newId}-descr">New task</span>.
                 <span id="task-${newId}-time-billed">
                     <input type="number" class="time-billed-hours" id="task-${newId}-hours" value="0" style="width: 50px;"> hours,
                     <input type="number" class="time-billed-minutes" id="task-${newId}-minutes" value="0.0" style="width: 60px;"> minutes
