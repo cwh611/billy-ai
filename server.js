@@ -238,6 +238,55 @@ app.patch("/update-tasks", async (req, res) => {
   }
 });
 
+app.post("/create-tasks", async (req, res) => {
+  const { tasks } = req.body;
+
+  if (!Array.isArray(tasks)) {
+    return res.status(400).json({ error: "Invalid task array" });
+  }
+
+  try {
+    const inserted = [];
+
+    for (const task of tasks) {
+      const result = await pool.query(
+        `INSERT INTO tasks (task_descr, time_billed, client_number, matter_number)
+         VALUES ($1, $2, $3, $4) RETURNING *`,
+        [task.task_descr, task.time_billed, task.client_number, task.matter_number]
+      );
+
+      inserted.push(result.rows[0]);
+    }
+
+    res.json({ success: true, inserted });
+  } catch (err) {
+    console.error("Error creating tasks:", err);
+    res.status(500).json({ error: "Failed to create tasks" });
+  }
+});
+
+app.delete("/delete-task/:id", async (req, res) => {
+  const taskId = req.params.id;
+  try {
+    await pool.query("DELETE FROM tasks WHERE id = $1", [taskId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error deleting task:", err);
+    res.status(500).json({ error: "Failed to delete task" });
+  }
+});
+
+app.delete("/delete-matter-tasks/:matter_number", async (req, res) => {
+  const matterNumber = req.params.matter_number;
+  try {
+    await pool.query("DELETE FROM tasks WHERE matter_number = $1", [matterNumber]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error deleting tasks by matter:", err);
+    res.status(500).json({ error: "Failed to delete matter's tasks" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

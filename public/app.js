@@ -71,14 +71,15 @@ function render_tasks(tasks) {
             ).join("");
 
             const editListItems = matter_tasks.map(t => `
-                <li class="matter-summary-content-li">
-                    <span contenteditable="true" id="task-${t.id}-descr">${t.task_descr}</span>
-                    <span id="task-${t.id}-time-billed">
-                        <input type="number" class="time-billed-hours" id="task-${t.id}-hours" min="0" step="1" value="${Math.floor(t.time_billed / 60)}" style="width: 50px;"> hours,
-                        <input type="number" class="time-billed-minutes" id="task-${t.id}-minutes" min="0" max="59.9" step="0.1" value="${(t.time_billed % 60).toFixed(1)}" style="width: 60px;"> minutes
-                    </span>
+                <li class="matter-summary-content-li" data-task-id="${t.id}">
+                  <span contenteditable="true" id="task-${t.id}-descr">${t.task_descr}</span>
+                  <span id="task-${t.id}-time-billed">
+                      <input type="number" class="time-billed-hours" id="task-${t.id}-hours" value="${Math.floor(t.time_billed / 60)}" style="width: 50px;"> hours,
+                      <input type="number" class="time-billed-minutes" id="task-${t.id}-minutes" value="${(t.time_billed % 60).toFixed(1)}" style="width: 60px;"> minutes
+                  </span>
+                  <button class="delete-task-btn" data-task-id="${t.id}">🗑</button>
                 </li>
-            `).join("");
+              `).join("");              
 
             const viewModeHTML = `
                 <div class="view-mode matter-summary">
@@ -123,6 +124,7 @@ function render_tasks(tasks) {
                         </select>
                     </div>
                     <div class="matter-summary-content-container">
+                        <button class="add-task-btn" data-matter-number="${task.matter_number}" data-index="${index}">+ Add Task</button>
                         <ul class="matter-summary-ul" id="matter-${task.matter_number}-summary-ul-edit">
                             ${editListItems}
                         </ul>
@@ -208,26 +210,53 @@ function render_tasks(tasks) {
                     const minutes = parseFloat(minutesInput.value) || 0;
                     const totalMinutes = parseFloat((hours * 60 + minutes).toFixed(1));
 
-                    updates.push({
-                        id: taskId,
-                        task_descr: newDescr,
-                        time_billed: totalMinutes,
-                        client_number: clientSelect.value,
-                        matter_number: matterSelect.value
-                    });
+                    if (taskId.startsWith("new-")) {
+                        // Create new task
+                        updates.push({
+                            _type: "new",
+                            task_descr: newDescr,
+                            time_billed: totalMinutes,
+                            client_number: clientSelect.value,
+                            matter_number: matterSelect.value
+                        });
+                    } else {
+                        // Update existing task
+                        updates.push({
+                            _type: "update",
+                            id: taskId,
+                            task_descr: newDescr,
+                            time_billed: totalMinutes,
+                            client_number: clientSelect.value,
+                            matter_number: matterSelect.value
+                        });
+                    }                    
                 });
 
                 console.log("Sending updates:", updates);
 
-                fetch(`${app_url}/update-tasks`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ updates })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log("Batch update response:", data);
-                    // ✅ Immediately fetch fresh data
+                const updatesToPatch = updates.filter(u => u._type === "update");
+                const updatesToPost = updates.filter(u => u._type === "new");
+
+                Promise.all([
+                    updatesToPatch.length > 0
+                        ? fetch(`${app_url}/update-tasks`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ updates: updatesToPatch })
+                        }).then(res => res.json())
+                        : Promise.resolve({ message: "No updates" }),
+                
+                    updatesToPost.length > 0
+                        ? fetch(`${app_url}/create-tasks`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ tasks: updatesToPost })
+                        }).then(res => res.json())
+                        : Promise.resolve({ message: "No new tasks" })
+                ])
+                .then(([patchResult, postResult]) => {
+                    console.log("Patch result:", patchResult);
+                    console.log("Post result:", postResult);
                     return fetch(`${app_url}/fetch-latest-task-logs`);
                 })
                 .then(res => res.json())
@@ -235,7 +264,7 @@ function render_tasks(tasks) {
                     console.log("Re-rendering with fresh data:", freshData);
                     render_tasks(freshData);
                 })
-                .catch(err => console.error("Error updating or refreshing tasks:", err));                
+                .catch(err => console.error("Error during update or refresh:", err));                             
 
                 viewMode.style.display = "flex";
                 editMode.style.display = "none";
@@ -252,8 +281,80 @@ function render_tasks(tasks) {
         btn.addEventListener("click", () => {
             const index = btn.getAttribute("data-index");
             const container = document.getElementById(`matter-summary-${parseInt(index) + 1}`);
-            container.remove();
-            // Optionally send DELETE to backend here
+            const matterNumberSpan = container.querySelector(".matter-number");
+            const matterNumberMatch = matterNumberSpan?.innerText.match(/\(([^)]+)\)/);
+            const matterNumber = matterNumberMatch ? matterNumberMatch[1] : null;
+    
+            if (!matterNumber) return;
+    
+            fetch(`${app_url}/delete-matter-tasks/${matterNumber}`, {
+                method: "DELETE"
+            })
+            .then(res => res.json())
+            .then(() => {
+                return fetch(`${app_url}/fetch-latest-task-logs`);
+            })
+            .then(res => res.json())
+            .then(data => {
+                render_tasks(data);
+            })
+            .catch(err => console.error("Failed to delete matter's tasks:", err));
+        });
+    });    
+
+    // 🗑 Handle delete task buttons
+    document.querySelectorAll(".delete-task-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const taskId = btn.getAttribute("data-task-id");
+            const isNew = taskId.startsWith("new-");
+    
+            if (isNew) {
+                // Just remove from DOM (not in DB yet)
+                const taskEl = document.querySelector(`li[data-task-id="${taskId}"]`);
+                if (taskEl) taskEl.remove();
+            } else {
+                // Delete from DB
+                fetch(`${app_url}/delete-task/${taskId}`, {
+                    method: "DELETE"
+                })
+                .then(res => res.json())
+                .then(() => {
+                    return fetch(`${app_url}/fetch-latest-task-logs`);
+                })
+                .then(res => res.json())
+                .then(data => {
+                    render_tasks(data);
+                })
+                .catch(err => console.error("Failed to delete task:", err));
+            }
+        });
+    });    
+
+    // ➕ Handle "add task" buttons
+    document.querySelectorAll(".add-task-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const matterNumber = btn.dataset.matterNumber;
+            const index = btn.dataset.index;
+
+            const ul = document.getElementById(`matter-${matterNumber}-summary-ul-edit`);
+            const newId = `new-${Date.now()}`; // temporary ID
+
+            const li = document.createElement("li");
+            li.className = "matter-summary-content-li";
+            li.dataset.taskId = newId;
+            li.innerHTML = `
+                <span contenteditable="true" id="task-${newId}-descr">New task</span>
+                <span id="task-${newId}-time-billed">
+                    <input type="number" class="time-billed-hours" id="task-${newId}-hours" value="0" style="width: 50px;"> hours,
+                    <input type="number" class="time-billed-minutes" id="task-${newId}-minutes" value="0.0" style="width: 60px;"> minutes
+                </span>
+                <button class="delete-task-btn" data-task-id="${newId}">🗑</button>
+            `;
+            ul.appendChild(li);
+
+            // re-attach delete handler to new button
+            li.querySelector(".delete-task-btn").addEventListener("click", () => li.remove());
         });
     });
+
 }
