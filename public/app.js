@@ -224,12 +224,18 @@ function render_tasks(tasks) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ updates })
                 })
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("Batch update response:", data);
-                        // Optional: re-fetch UI here
-                    })
-                    .catch(err => console.error("Error updating tasks:", err));
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Batch update response:", data);
+                    // ✅ Immediately fetch fresh data
+                    return fetch(`${app_url}/fetch-latest-task-logs`);
+                })
+                .then(res => res.json())
+                .then(freshData => {
+                    console.log("Re-rendering with fresh data:", freshData);
+                    render_tasks(freshData);
+                })
+                .catch(err => console.error("Error updating or refreshing tasks:", err));                
 
                 viewMode.style.display = "flex";
                 editMode.style.display = "none";
