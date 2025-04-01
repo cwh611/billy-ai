@@ -198,10 +198,19 @@ function render_tasks(tasks) {
                     const descrSpan = item.querySelector("span[id^='task-'][id$='-descr']");
                     if (!descrSpan) return;
 
-                    const taskId = descrSpan.id.split("-")[1];
+                    const match = descrSpan.id.match(/^task-(.+)-descr$/);
+                    if (!match) return;
+                    const taskId = match[1];
+
                     console.log("taskId:", taskId);
                     const hoursInput = document.getElementById(`task-${taskId}-hours`);
                     const minutesInput = document.getElementById(`task-${taskId}-minutes`);
+                    
+                    if (!hoursInput || !minutesInput) {
+                        console.warn(`Missing time inputs for task-${taskId}`);
+                        return;
+                    }
+                    
                     const clientSelect = container.querySelector(`#client-select-${index}`);
                     const matterSelect = container.querySelector(`#matter-select-${index}`);
 
