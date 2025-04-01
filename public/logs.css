@@ -57,10 +57,10 @@ main {
     padding: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     font-family: "Alfa Slab One", serif;
     font-size: 30px;
     height: 10%;
-    align-items: end
 }
 
 #h1-iris {
@@ -74,74 +74,44 @@ main {
 #main-container {
     height: 90%;
     width: 100%;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly
+    white-space: nowrap;
+    gap: 20px
 }
 
-#todays-activity {
+.daily-log-summaries-container-header {
     font-family: "Alfa Slab One", serif;
     font-size: 18px;
-    color: #FAFAF5
-}
-
-#update-logs-btn, #review-logs-btn, #summary-btn, #detail-btn {
-    background-color: #8775FF;
-    font-size: 16px;
     color: #FAFAF5;
-    font-family: "Alfa Slab One", serif;
-    border: 0px;
-    border-radius: 30px;
-    width: 150px;
-    height: 40px;
-    box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.15);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    flex: 0 0 auto;
 }
 
-#update-logs-btn:active, #review-logs-btn:active, #summary-btn:active, #detail-btn:active, .add-task-btn:active, .delete-task-btn:active {
-    transform: scale(0.96);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-#log-summaries-container {
+.daily-log-summaries-container {
     display: flex;
     width: 80%;
+    height: 300px;
     font-family: "Anuphan", serif;
     justify-content: center;
     font-size: 14px;
     overflow-x: auto;
     white-space: nowrap;
-    gap: 30px
-}
-
-.matter-summary-subcontainer {
-    height: 300px;
-    flex: 0 0 auto;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #FAFAF5;
-    color: black;
-    border-radius: 30px;
+    gap: 30px;
+    flex: 0 0 auto
 }
 
 .matter-summary {
-    height: 90%;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-
-.client-name {
-    font-weight: bold
-}
-
-.matter-descr {
-    font-weight: 250
+    background-color: #FAFAF5;
+    height: 100%;
+    width: 300px;
+    flex: 0 0 auto;
+    white-space: wrap;
+    border-radius: 30px;
+    align-items: center
 }
 
 .client-name-number-container, .matter-descr-number-container {
@@ -156,29 +126,27 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: #FAFAF5;
+    font-size: 14px;    
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
-    color: #FAFAF5;
-    font-size: 14px
 
 }
 
 .matter-summary-content-container {
-    height: 70%;
+    height: 60%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     overflow-y: auto;
     padding-top: 10px;
-    border-radius: 30px;
+
     padding-right: 20px;
     white-space: wrap
 }
 
-.matter-summary-ul {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start
+.matter-summary-time-billed {
+    height: 10%
 }
 
 .summary-controls {
@@ -244,24 +212,6 @@ main {
     background-color: #FF7878;
     color: rgba(0, 0, 0, 0.8);
     transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-#log-type-btns, #bottom-btns {
-    width: 40%;
-    display: flex;
-    justify-content: space-evenly
-}
-
-.matter-summary-time-billed {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.25);
-    height: 50px
-}
-
-.time-billed-label {
-    font-weight: bold
 }
 
 select {

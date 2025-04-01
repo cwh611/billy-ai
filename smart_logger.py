@@ -64,19 +64,8 @@ def get_frontmost_app_and_title():
 
 
 def load_json_logs():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    json_path = os.path.join(script_dir, "activity_logs.json")
-    
-    if os.path.exists(json_path):
-        try:
-            with open(json_path, 'r') as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            print("Error reading JSON file. Creating new log.")
-    
-    # Return empty log structure if file doesn't exist or has errors
+    # Always start with an empty log structure, overwriting previous logs
     return {"logs": []}
-
 
 def save_json_logs(logs):
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -87,7 +76,6 @@ def save_json_logs(logs):
 
 
 def log_active_windows(interval=5):
-    # Load existing JSON logs or create new structure
     logs_data = load_json_logs()
 
     last_owner = None

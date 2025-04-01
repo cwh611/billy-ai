@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Iris AI</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@100..700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../public/logs.css">
+    </head>
+    <body>
+        <div id="menu-bar">
+            <div class="menu-item" id="dashboard">
+                Dashboard
+            </div>
+            <div class="menu-item" id="logs">
+                Logs
+            </div>
+            <div class="menu-item" id="clients">
+                Clients
+            </div>
+            <div class="menu-item" id="matters">
+                Matters
+            </div>
+            <div class="menu-item" id="team">
+                Team
+            </div>
+            <div class="menu-item" id="send-an-invoice">
+                Invoices
+            </div>
+            <div class="menu-item" id="financials">
+                Financials
+            </div>
+            <div class="menu-item" id="settings">
+                Settings
+            </div>
+            <div class="menu-item" id="support">
+                Support
+            </div>
+        </div>
+        <main>
+            <div id="header-div">
+                <span id="h1-iris">
+                    iris
+                </span>
+                <span id="h1-ai">
+                    ai
+                </span>
+            </div>
+            <div id="main-container">
+                <div class="daily-log-summaries-container-header">April 1, 2025</div>
+                <div id="daily-log-summaries-container-2025-04-01" class="daily-log-summaries-container">
+                    <div class="edit-mode matter-summary" style="display: flex">
+                        <div class="summary-header-container">
+                            <select class="client-select">
+                                <option value="Microsoft (4211)">
+                                    Microsoft (4211)
+                                </option>
+                            </select>
+                            <select class="matter-select">`
+                                <option value="Derivative Securities Litigation (488)">
+                                    Derivative Securities Litigation (488)
+                                </option>
+                            </select>
+                        </div>
+                        <div contenteditable="true" class="matter-summary-content-container">
+                            <ul class="matter-summary-ul">
+                                <li id="matter-1-summary-content-li-1" class="matter-summary-content-li">
+                                    <span>Reviewed plaintiff deposition transcript.</span>
+                                    <span>
+                                        <input type="number" class="time-billed-hours"><strong> hours</strong>,
+                                        <input type="number" class="time-billed-minutes"><strong> minutes</strong>.
+                                    </span>
+                                    <button class="delete-task-btn">Delete</button>
+                                </li>
+                                <li id="matter-1-summary-content-li-2" class="matter-summary-content-li">
+                                    <span>Drafted and edited motion for summary judgment.</span>
+                                    <span>
+                                        <input type="number" class="time-billed-hours"><strong> hours</strong>,
+                                        <input type="number" class="time-billed-minutes"><strong> minutes</strong>.
+                                    </span>
+                                    <button class="delete-task-btn">Delete</button>
+                                </li>
+                            </ul>
+                            <button class="add-task-btn">Add task</button>
+                        </div>
+                        <div class="matter-summary-time-billed">
+                            <span class="time-billed-label">Total time billed:</span>
+                            <span contenteditable="true" class="time-billed-number">6 hours, 13 minutes.</span>
+                        </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-index="${index}">Save</button>
+                            <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
+                        </div>
+                    </div>
+                    <div id="matter-summary-2" class="matter-summary">
+                        <div class="summary-header-container">
+                            <div class="client-name-number-container">
+                                <span class="client-name">
+                                    VMWare
+                                </span>
+                                <span class="client-number">
+                                    (4365)
+                                </span>
+                            </div>
+                            <div class="matter-descr-number-container">
+                                <div class="matter-descr-number-subcontainer">
+                                    <span class="matter-descr">
+                                        Splunk Acquisition
+                                    </span>
+                                    <span class="matter-number">
+                                        (011)
+                                    </span>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="matter-summary-content-container">
+                            <ul class="matter-summary-ul">
+                                <li id="matter-2-summary-content-li-1" class="matter-summary-content-li">
+                                    Reviewed and edited stock purchase agreement and sponsor side letter.
+                                </li>
+                                <li id="matter-2-summary-content-li-2" class="matter-summary-content-li">
+                                    Attended client conference call with M&A and tax teams.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="matter-summary-time-billed">
+                            <span class="time-billed-label">
+                                Total time billed:
+                            </span>
+                            <span class="time-billed-number">
+                                2 hours, 31 mimutes.
+                            </span>
+                        </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-index="${index}">Edit</button>
+                            <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="daily-log-summaries-container-header">March 31, 2025</div>
+                <div id="daily-log-summaries-container-2025-03-31" class="daily-log-summaries-container">
+                    <div class="edit-mode matter-summary" style="display: flex">
+                        <div class="summary-header-container">
+                            <select class="client-select">
+                                <option value="Microsoft (4211)">
+                                    Microsoft (4211)
+                                </option>
+                            </select>
+                            <select class="matter-select">`
+                                <option value="Derivative Securities Litigation (488)">
+                                    Derivative Securities Litigation (488)
+                                </option>
+                            </select>
+                        </div>
+                        <div contenteditable="true" class="matter-summary-content-container">
+                            <ul class="matter-summary-ul">
+                                <li id="matter-1-summary-content-li-1" class="matter-summary-content-li">
+                                    <span>Reviewed plaintiff deposition transcript.</span>
+                                    <span>
+                                        <input type="number" class="time-billed-hours"><strong> hours</strong>,
+                                        <input type="number" class="time-billed-minutes"><strong> minutes</strong>.
+                                    </span>
+                                    <button class="delete-task-btn">Delete</button>
+                                </li>
+                                <li id="matter-1-summary-content-li-2" class="matter-summary-content-li">
+                                    <span>Drafted and edited motion for summary judgment.</span>
+                                    <span>
+                                        <input type="number" class="time-billed-hours"><strong> hours</strong>,
+                                        <input type="number" class="time-billed-minutes"><strong> minutes</strong>.
+                                    </span>
+                                    <button class="delete-task-btn">Delete</button>
+                                </li>
+                            </ul>
+                            <button class="add-task-btn">Add task</button>
+                        </div>
+                        <div class="matter-summary-time-billed">
+                            <span class="time-billed-label">Total time billed:</span>
+                            <span contenteditable="true" class="time-billed-number">6 hours, 13 minutes.</span>
+                        </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-index="${index}">Save</button>
+                            <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
+                        </div>
+                    </div>
+                    <div id="matter-summary-2" class="matter-summary">
+                        <div class="summary-header-container">
+                            <div class="client-name-number-container">
+                                <span class="client-name">
+                                    VMWare
+                                </span>
+                                <span class="client-number">
+                                    (4365)
+                                </span>
+                            </div>
+                            <div class="matter-descr-number-container">
+                                <div class="matter-descr-number-subcontainer">
+                                    <span class="matter-descr">
+                                        Splunk Acquisition
+                                    </span>
+                                    <span class="matter-number">
+                                        (011)
+                                    </span>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="matter-summary-content-container">
+                            <ul class="matter-summary-ul">
+                                <li id="matter-2-summary-content-li-1" class="matter-summary-content-li">
+                                    Reviewed and edited stock purchase agreement and sponsor side letter.
+                                </li>
+                                <li id="matter-2-summary-content-li-2" class="matter-summary-content-li">
+                                    Attended client conference call with M&A and tax teams.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="matter-summary-time-billed">
+                            <span class="time-billed-label">
+                                Total time billed:
+                            </span>
+                            <span class="time-billed-number">
+                                2 hours, 31 mimutes.
+                            </span>
+                        </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-index="${index}">Edit</button>
+                            <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="daily-log-summaries-container-header">March 30, 2025</div>
+                <div id="daily-log-summaries-container-2025-03-30" class="daily-log-summaries-container">
+                    <div class="edit-mode matter-summary" style="display: flex">
+                        <div class="summary-header-container">
+                            <select class="client-select">
+                                <option value="Microsoft (4211)">
+                                    Microsoft (4211)
+                                </option>
+                            </select>
+                            <select class="matter-select">`
+                                <option value="Derivative Securities Litigation (488)">
+                                    Derivative Securities Litigation (488)
+                                </option>
+                            </select>
+                        </div>
+                        <div contenteditable="true" class="matter-summary-content-container">
+                            <ul class="matter-summary-ul">
+                                <li id="matter-1-summary-content-li-1" class="matter-summary-content-li">
+                                    <span>Reviewed plaintiff deposition transcript.</span>
+                                    <span>
+                                        <input type="number" class="time-billed-hours"><strong> hours</strong>,
+                                        <input type="number" class="time-billed-minutes"><strong> minutes</strong>.
+                                    </span>
+                                    <button class="delete-task-btn">Delete</button>
+                                </li>
+                                <li id="matter-1-summary-content-li-2" class="matter-summary-content-li">
+                                    <span>Drafted and edited motion for summary judgment.</span>
+                                    <span>
+                                        <input type="number" class="time-billed-hours"><strong> hours</strong>,
+                                        <input type="number" class="time-billed-minutes"><strong> minutes</strong>.
+                                    </span>
+                                    <button class="delete-task-btn">Delete</button>
+                                </li>
+                            </ul>
+                            <button class="add-task-btn">Add task</button>
+                        </div>
+                        <div class="matter-summary-time-billed">
+                            <span class="time-billed-label">Total time billed:</span>
+                            <span contenteditable="true" class="time-billed-number">6 hours, 13 minutes.</span>
+                        </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-index="${index}">Save</button>
+                            <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
+                        </div>
+                    </div>
+                    <div id="matter-summary-2" class="matter-summary">
+                        <div class="summary-header-container">
+                            <div class="client-name-number-container">
+                                <span class="client-name">
+                                    VMWare
+                                </span>
+                                <span class="client-number">
+                                    (4365)
+                                </span>
+                            </div>
+                            <div class="matter-descr-number-container">
+                                <div class="matter-descr-number-subcontainer">
+                                    <span class="matter-descr">
+                                        Splunk Acquisition
+                                    </span>
+                                    <span class="matter-number">
+                                        (011)
+                                    </span>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="matter-summary-content-container">
+                            <ul class="matter-summary-ul">
+                                <li id="matter-2-summary-content-li-1" class="matter-summary-content-li">
+                                    Reviewed and edited stock purchase agreement and sponsor side letter.
+                                </li>
+                                <li id="matter-2-summary-content-li-2" class="matter-summary-content-li">
+                                    Attended client conference call with M&A and tax teams.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="matter-summary-time-billed">
+                            <span class="time-billed-label">
+                                Total time billed:
+                            </span>
+                            <span class="time-billed-number">
+                                2 hours, 31 mimutes.
+                            </span>
+                        </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-index="${index}">Edit</button>
+                            <button class="delete-summary-btn summary-control-btn" data-index="${index}">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script src="/logs.js">
+        </script>
+    </body>
+</html>

@@ -26,6 +26,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
+app.get('/logs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'logs.html'))
+})
+
 app.post('/start-logger', (req, res) => {
   if (loggerProcess) {
     return res.status(400).send('Logger is already running.');
@@ -49,7 +53,6 @@ app.post('/start-logger', (req, res) => {
   res.send('Logger started.');
 });
 
-// Upload handler
 app.post('/upload-log', upload.fields([{ name: 'logfile', maxCount: 1 }]), async (req, res) => {
   const logFile = req.files['logfile']?.[0]?.path;
   if (!logFile) return res.status(400).send("Missing json file.");
@@ -81,7 +84,6 @@ app.post('/upload-log', upload.fields([{ name: 'logfile', maxCount: 1 }]), async
       client.release();
     }
 
-    // 🔥 Only run this *after* logs successfully inserted
     const { stdout } = await new Promise((resolve, reject) => {
       exec('python3 generate_billing_statement.py', (error, stdout, stderr) => {
         if (error) return reject(error);
@@ -126,7 +128,36 @@ app.post('/upload-log', upload.fields([{ name: 'logfile', maxCount: 1 }]), async
   }
 });
 
-app.get('/fetch-latest-task-logs', async (req, res) => {
+app.get('/fetch-todays-task-logs', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    
+    const query = `
+      SELECT id, task_descr, client_number, matter_number, time_billed, date
+      FROM tasks
+      WHERE date = CURRENT_DATE
+    `;
+    
+    const result = await client.query(query);
+    client.release();
+    
+    const summaries = result.rows.map(row => ({
+      id: row.id,
+      task_descr: row.task_descr,
+      client_number: row.client_number,
+      matter_number: row.matter_number,
+      time_billed: row.time_billed,
+      date: row.date
+    }));
+    
+    res.json(summaries);
+  } catch (err) {
+    console.error("❌ Error fetching from PostgreSQL:", err);
+    res.status(500).send("Summary not available.");
+  }
+});
+
+app.get('/fetch-task-logs', async (req, res) => {
   try {
     const client = await pool.connect();
     
@@ -154,7 +185,6 @@ app.get('/fetch-latest-task-logs', async (req, res) => {
   }
 });
 
-// GET /get-client-map
 app.get('/get-client-map', async (req, res) => {
   try {
     const client = await pool.connect();
@@ -176,7 +206,6 @@ app.get('/get-client-map', async (req, res) => {
   }
 });
 
-// GET /get-matter-map
 app.get('/get-matter-map', async (req, res) => {
   try {
     const client = await pool.connect();

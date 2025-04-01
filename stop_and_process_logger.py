@@ -12,7 +12,6 @@ print("🛑 Stopping smart_logger.py...")
 subprocess.run(["pkill", "-f", "smart_logger.py"])
 time.sleep(1)  # Give it a moment to shut down
 
-# Paths to database files
 script_dir = os.path.dirname(os.path.abspath(__file__))
 activity_path = os.path.join(script_dir, "activity_logs.json")
 
