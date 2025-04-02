@@ -36,40 +36,44 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function render_tasks(tasks) {
-    // Group tasks by date
+    function parseDateFromYMD(dateStr) {
+        const [year, month, day] = dateStr.split('-');
+        return new Date(Date.UTC(year, month - 1, day));
+    }
+
+    function formatTimeBilled(minutesFloat) {
+        const hours = Math.floor(minutesFloat / 60);
+        const remainingMinutes = +(minutesFloat % 60).toFixed(1);
+        if (hours > 0 && remainingMinutes > 0) return `${hours} hours, ${remainingMinutes} minutes.`;
+        if (hours > 0) return `${hours} hours.`;
+        return `${remainingMinutes} minutes.`;
+    }
+
     const tasksByDate = tasks.reduce((acc, task) => {
-        const date = task.date || new Date().toISOString().slice(0, 10);
-        if (!acc[date]) {
-            acc[date] = [];
-        }
+        const date = task.date || new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+        if (!acc[date]) acc[date] = [];
         acc[date].push(task);
         return acc;
     }, {});
 
-    // Get the main container
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = "";
 
-    // Sort dates in descending order (most recent first)
-    // Since dates are in YYYY-MM-DD format, we can sort them directly
-    const sortedDates = Object.keys(tasksByDate).sort((a, b) => b > a ? 1 : -1);
+    const sortedDates = Object.keys(tasksByDate).sort((a, b) => b.localeCompare(a));
 
-    // Create containers for each date
     sortedDates.forEach(date => {
-        // Create and add the date header
         const dateHeader = document.createElement("div");
         dateHeader.className = "daily-log-summaries-container-header";
-        const localDate = new Date(date + 'T00:00:00-07:00'); // Create date in LA timezone
-        dateHeader.textContent = localDate.toLocaleDateString('en-US', { 
+        const localDate = parseDateFromYMD(date);
+        dateHeader.textContent = localDate.toLocaleDateString('en-US', {
             timeZone: 'America/Los_Angeles',
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
             day: 'numeric'
         });
         mainContainer.appendChild(dateHeader);
 
-        // Create the container for the day's tasks
         const dateContainer = document.createElement("div");
         dateContainer.className = "daily-log-summaries-container";
 
@@ -79,9 +83,10 @@ function render_tasks(tasks) {
         dateTasks.forEach((task, index) => {
             if (!matter_numbers_rendered.includes(task.matter_number)) {
                 matter_numbers_rendered.push(task.matter_number);
+
                 const sub = document.createElement("div");
                 sub.className = "matter-summary";
-                sub.id = `matter-summary-${date}-${index + 1}`;
+                sub.id = `matter-summary-${date}-${index}`;
 
                 const matter_tasks = dateTasks.filter(t => t.matter_number === task.matter_number);
 
@@ -94,14 +99,14 @@ function render_tasks(tasks) {
 
                 const editListItems = matter_tasks.map(t => `
                     <li class="matter-summary-content-li" data-task-id="${t.id}">
-                      <span contenteditable="true" id="task-${t.id}-descr">${t.task_descr}</span>
-                      <span id="task-${t.id}-time-billed">
-                          <input type="number" class="time-billed-hours" id="task-${t.id}-hours" value="${Math.floor(t.time_billed / 60)}"><strong> hours</strong>,
-                          <input type="number" class="time-billed-minutes" id="task-${t.id}-minutes" value="${(t.time_billed % 60).toFixed(1)}"><strong> minutes</strong>.
-                      </span>
-                      <button class="delete-task-btn" data-task-id="${t.id}">Delete</button>
+                        <span contenteditable="true" id="task-${t.id}-descr">${t.task_descr}</span>
+                        <span id="task-${t.id}-time-billed">
+                            <input type="number" class="time-billed-hours" id="task-${t.id}-hours" value="${Math.floor(t.time_billed / 60)}"> hours,
+                            <input type="number" class="time-billed-minutes" id="task-${t.id}-minutes" value="${(t.time_billed % 60).toFixed(1)}"> minutes.
+                        </span>
+                        <button class="delete-task-btn" data-task-id="${t.id}">Delete</button>
                     </li>
-                  `).join("");              
+                `).join("");
 
                 const viewModeHTML = `
                     <div class="view-mode matter-summary">
@@ -174,15 +179,7 @@ function render_tasks(tasks) {
         mainContainer.appendChild(dateContainer);
     });
 
-    function formatTimeBilled(minutesFloat) {
-        const hours = Math.floor(minutesFloat / 60);
-        const remainingMinutes = +(minutesFloat % 60).toFixed(1);
-        if (hours > 0 && remainingMinutes > 0) return `${hours} hours, ${remainingMinutes} minutes.`;
-        if (hours > 0) return `${hours} hours.`;
-        return `${remainingMinutes} minutes.`;
-    }
-
-    // Update total time billed for each matter
+    // === Total time billed update ===
     Object.entries(tasksByDate).forEach(([date, dateTasks]) => {
         const matter_numbers = [...new Set(dateTasks.map(task => task.matter_number))];
         matter_numbers.forEach(matter_number => {
@@ -193,15 +190,15 @@ function render_tasks(tasks) {
             const formatted = formatTimeBilled(total);
             const viewElement = document.getElementById(`matter-${matter_number}-total-time-billed-view`);
             const editElement = document.getElementById(`matter-${matter_number}-total-time-billed-edit`);
-            
+
             if (viewElement) viewElement.innerText = formatted;
             if (editElement) editElement.innerText = formatted;
         });
     });
 
-    // Update event listeners for client selects
+    // === Client select change updates matter select ===
     document.querySelectorAll(".client-select").forEach(clientSelect => {
-        clientSelect.addEventListener("change", (e) => {
+        clientSelect.addEventListener("change", () => {
             const date = clientSelect.dataset.date;
             const index = clientSelect.dataset.index;
             const selectedClient = clientSelect.value;
@@ -217,12 +214,12 @@ function render_tasks(tasks) {
         });
     });
 
-    // Update event listeners for edit/save buttons
+    // === Edit/Save summary ===
     document.querySelectorAll(".edit-save-summary-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const date = btn.getAttribute("data-date");
             const index = btn.getAttribute("data-index");
-            const container = document.getElementById(`matter-summary-${date}-${parseInt(index) + 1}`);
+            const container = document.getElementById(`matter-summary-${date}-${index}`);
             const viewMode = container.querySelector(".view-mode");
             const editMode = container.querySelector(".edit-mode");
             const isEditing = editMode.style.display !== "none";
@@ -241,12 +238,6 @@ function render_tasks(tasks) {
 
                     const hoursInput = document.getElementById(`task-${taskId}-hours`);
                     const minutesInput = document.getElementById(`task-${taskId}-minutes`);
-                    
-                    if (!hoursInput || !minutesInput) {
-                        console.warn(`Missing time inputs for task-${taskId}`);
-                        return;
-                    }
-                    
                     const clientSelect = container.querySelector(`#client-select-${date}-${index}`);
                     const matterSelect = container.querySelector(`#matter-select-${date}-${index}`);
 
@@ -273,40 +264,32 @@ function render_tasks(tasks) {
                             client_number: clientSelect.value,
                             matter_number: matterSelect.value
                         });
-                    }                    
+                    }
                 });
 
                 const updatesToPatch = updates.filter(u => u._type === "update");
                 const updatesToPost = updates.filter(u => u._type === "new");
 
                 Promise.all([
-                    updatesToPatch.length > 0
+                    updatesToPatch.length
                         ? fetch(`${app_url}/update-tasks`, {
                             method: "PATCH",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ updates: updatesToPatch })
                         }).then(res => res.json())
-                        : Promise.resolve({ message: "No updates" }),
-                
-                    updatesToPost.length > 0
+                        : Promise.resolve(),
+                    updatesToPost.length
                         ? fetch(`${app_url}/create-tasks`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ tasks: updatesToPost })
                         }).then(res => res.json())
-                        : Promise.resolve({ message: "No new tasks" })
+                        : Promise.resolve()
                 ])
-                .then(([patchResult, postResult]) => {
-                    console.log("Patch result:", patchResult);
-                    console.log("Post result:", postResult);
-                    return fetch(`${app_url}/fetch-task-logs`);
-                })
+                .then(() => fetch(`${app_url}/fetch-task-logs`))
                 .then(res => res.json())
-                .then(freshData => {
-                    console.log("Re-rendering with fresh data:", freshData);
-                    render_tasks(freshData);
-                })
-                .catch(err => console.error("Error during update or refresh:", err));                             
+                .then(freshData => render_tasks(freshData))
+                .catch(err => console.error("Update error:", err));
 
                 viewMode.style.display = "flex";
                 editMode.style.display = "none";
@@ -319,68 +302,50 @@ function render_tasks(tasks) {
         });
     });
 
-    // Update event listeners for delete summary buttons
+    // === Delete summary ===
     document.querySelectorAll(".delete-summary-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            const date = btn.getAttribute("data-date");
-            const index = btn.getAttribute("data-index");
-            const container = document.getElementById(`matter-summary-${date}-${parseInt(index) + 1}`);
+            const date = btn.dataset.date;
+            const index = btn.dataset.index;
+            const container = document.getElementById(`matter-summary-${date}-${index}`);
             const matterNumberSpan = container.querySelector(".matter-number");
-            const matterNumberMatch = matterNumberSpan?.innerText.match(/\(([^)]+)\)/);
-            const matterNumber = matterNumberMatch ? matterNumberMatch[1] : null;
-    
+            const match = matterNumberSpan?.innerText.match(/\(([^)]+)\)/);
+            const matterNumber = match ? match[1] : null;
             if (!matterNumber) return;
-    
-            fetch(`${app_url}/delete-matter-tasks/${matterNumber}`, {
-                method: "DELETE"
-            })
-            .then(res => res.json())
-            .then(() => {
-                return fetch(`${app_url}/fetch-task-logs`);
-            })
-            .then(res => res.json())
-            .then(data => {
-                render_tasks(data);
-            })
-            .catch(err => console.error("Failed to delete matter's tasks:", err));
-        });
-    });    
 
-    // Update event listeners for delete task buttons
+            fetch(`${app_url}/delete-matter-tasks/${matterNumber}`, { method: "DELETE" })
+                .then(() => fetch(`${app_url}/fetch-task-logs`))
+                .then(res => res.json())
+                .then(data => render_tasks(data))
+                .catch(err => console.error("Delete error:", err));
+        });
+    });
+
+    // === Delete task ===
     document.querySelectorAll(".delete-task-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            const taskId = btn.getAttribute("data-task-id");
-            const isNew = taskId.startsWith("new-");
-            if (isNew) {
+            const taskId = btn.dataset.taskId;
+            if (taskId.startsWith("new-")) {
                 const taskEl = document.querySelector(`li[data-task-id="${taskId}"]`);
                 if (taskEl) taskEl.remove();
             } else {
-                fetch(`${app_url}/delete-task/${taskId}`, {
-                    method: "DELETE"
-                })
-                .then(res => res.json())
-                .then(() => {
-                    return fetch(`${app_url}/fetch-task-logs`);
-                })
-                .then(res => res.json())
-                .then(data => {
-                    render_tasks(data);
-                })
-                .catch(err => console.error("Failed to delete task:", err));
+                fetch(`${app_url}/delete-task/${taskId}`, { method: "DELETE" })
+                    .then(() => fetch(`${app_url}/fetch-task-logs`))
+                    .then(res => res.json())
+                    .then(data => render_tasks(data))
+                    .catch(err => console.error("Task delete error:", err));
             }
         });
-    });    
+    });
 
-    // Update event listeners for add task buttons
+    // === Add task ===
     document.querySelectorAll(".add-task-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const matterNumber = btn.dataset.matterNumber;
             const date = btn.dataset.date;
             const index = btn.dataset.index;
-
             const ul = document.getElementById(`matter-${matterNumber}-summary-ul-edit`);
             const newId = `new-${Date.now()}`;
-
             const li = document.createElement("li");
             li.className = "matter-summary-content-li";
             li.dataset.taskId = newId;
@@ -393,7 +358,6 @@ function render_tasks(tasks) {
                 <button class="delete-task-btn" data-task-id="${newId}">🗑</button>
             `;
             ul.appendChild(li);
-
             li.querySelector(".delete-task-btn").addEventListener("click", () => li.remove());
         });
     });
