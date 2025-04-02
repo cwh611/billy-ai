@@ -222,12 +222,7 @@ function render_tasks(tasks) {
         btn.addEventListener("click", () => {
             const date = btn.getAttribute("data-date");
             const index = btn.getAttribute("data-index");
-            // Find the container by looking for the matter-summary div with the correct ID
-            const container = document.querySelector(`#matter-summary-${date}-${parseInt(index) + 1}`);
-            if (!container) {
-                console.error(`Could not find container for date ${date} and index ${index}`);
-                return;
-            }
+            const container = document.getElementById(`matter-summary-${date}-${parseInt(index) + 1}`);
             const viewMode = container.querySelector(".view-mode");
             const editMode = container.querySelector(".edit-mode");
             const isEditing = editMode.style.display !== "none";
@@ -329,20 +324,12 @@ function render_tasks(tasks) {
         btn.addEventListener("click", () => {
             const date = btn.getAttribute("data-date");
             const index = btn.getAttribute("data-index");
-            // Find the container by looking for the matter-summary div with the correct ID
-            const container = document.querySelector(`#matter-summary-${date}-${parseInt(index) + 1}`);
-            if (!container) {
-                console.error(`Could not find container for date ${date} and index ${index}`);
-                return;
-            }
+            const container = document.getElementById(`matter-summary-${date}-${parseInt(index) + 1}`);
             const matterNumberSpan = container.querySelector(".matter-number");
             const matterNumberMatch = matterNumberSpan?.innerText.match(/\(([^)]+)\)/);
             const matterNumber = matterNumberMatch ? matterNumberMatch[1] : null;
     
-            if (!matterNumber) {
-                console.error("Could not find matter number in container");
-                return;
-            }
+            if (!matterNumber) return;
     
             fetch(`${app_url}/delete-matter-tasks/${matterNumber}`, {
                 method: "DELETE"
