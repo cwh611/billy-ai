@@ -59,8 +59,8 @@ function render_tasks(tasks) {
         dateContainer.className = "daily-log-summaries-container";
         
         // Add date header
-        const dateHeader = document.createElement("h2");
-        dateHeader.className = "date-header";
+        const dateHeader = document.createElement("div");
+        dateHeader.className = "daily-log-summaries-container-header";
         dateHeader.textContent = new Date(date).toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
@@ -120,6 +120,10 @@ function render_tasks(tasks) {
                             <span class="time-billed-label">Total time billed:</span>
                             <span class="time-billed-number" id="matter-${task.matter_number}-total-time-billed-view"></span>
                         </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-date="${date}" data-index="${index}">Edit</button>
+                            <button class="delete-summary-btn summary-control-btn" data-date="${date}" data-index="${index}">Delete</button>
+                        </div>
                     </div>
                 `;
 
@@ -151,17 +155,14 @@ function render_tasks(tasks) {
                             <span class="time-billed-label">Total time billed:</span>
                             <span contenteditable="true" class="time-billed-number" id="matter-${task.matter_number}-total-time-billed-edit"></span>
                         </div>
+                        <div class="summary-controls">
+                            <button class="edit-save-summary-btn summary-control-btn" data-date="${date}" data-index="${index}">Edit</button>
+                            <button class="delete-summary-btn summary-control-btn" data-date="${date}" data-index="${index}">Delete</button>
+                        </div>
                     </div>
                 `;
 
-                const controlsHTML = `
-                    <div class="summary-controls">
-                        <button class="edit-save-summary-btn summary-control-btn" data-date="${date}" data-index="${index}">Edit</button>
-                        <button class="delete-summary-btn summary-control-btn" data-date="${date}" data-index="${index}">Delete</button>
-                    </div>
-                `;
-
-                sub.innerHTML = viewModeHTML + editModeHTML + controlsHTML;
+                sub.innerHTML = viewModeHTML + editModeHTML;
                 dateContainer.appendChild(sub);
             }
         });
