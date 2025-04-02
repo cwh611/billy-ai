@@ -51,20 +51,21 @@ function render_tasks(tasks) {
     mainContainer.innerHTML = "";
 
     // Sort dates in descending order (most recent first)
-    const sortedDates = Object.keys(tasksByDate).sort((a, b) => b.localeCompare(a));
+    // Since dates are in YYYY-MM-DD format, we can sort them directly
+    const sortedDates = Object.keys(tasksByDate).sort((a, b) => b > a ? 1 : -1);
 
     // Create containers for each date
     sortedDates.forEach(date => {
         // Create and add the date header
         const dateHeader = document.createElement("div");
         dateHeader.className = "daily-log-summaries-container-header";
-        const localDate = new Date(date);
-        dateHeader.textContent = localDate.toLocaleDateString('en-CA', { 
-          timeZone: 'America/Los_Angeles', 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric'
+        const localDate = new Date(date + 'T00:00:00-07:00'); // Create date in LA timezone
+        dateHeader.textContent = localDate.toLocaleDateString('en-US', { 
+            timeZone: 'America/Los_Angeles',
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
         });
         mainContainer.appendChild(dateHeader);
 
@@ -221,7 +222,12 @@ function render_tasks(tasks) {
         btn.addEventListener("click", () => {
             const date = btn.getAttribute("data-date");
             const index = btn.getAttribute("data-index");
-            const container = document.getElementById(`matter-summary-${date}-${parseInt(index) + 1}`);
+            // Find the container by looking for the matter-summary div with the correct ID
+            const container = document.querySelector(`#matter-summary-${date}-${parseInt(index) + 1}`);
+            if (!container) {
+                console.error(`Could not find container for date ${date} and index ${index}`);
+                return;
+            }
             const viewMode = container.querySelector(".view-mode");
             const editMode = container.querySelector(".edit-mode");
             const isEditing = editMode.style.display !== "none";
@@ -323,12 +329,20 @@ function render_tasks(tasks) {
         btn.addEventListener("click", () => {
             const date = btn.getAttribute("data-date");
             const index = btn.getAttribute("data-index");
-            const container = document.getElementById(`matter-summary-${date}-${parseInt(index) + 1}`);
+            // Find the container by looking for the matter-summary div with the correct ID
+            const container = document.querySelector(`#matter-summary-${date}-${parseInt(index) + 1}`);
+            if (!container) {
+                console.error(`Could not find container for date ${date} and index ${index}`);
+                return;
+            }
             const matterNumberSpan = container.querySelector(".matter-number");
             const matterNumberMatch = matterNumberSpan?.innerText.match(/\(([^)]+)\)/);
             const matterNumber = matterNumberMatch ? matterNumberMatch[1] : null;
     
-            if (!matterNumber) return;
+            if (!matterNumber) {
+                console.error("Could not find matter number in container");
+                return;
+            }
     
             fetch(`${app_url}/delete-matter-tasks/${matterNumber}`, {
                 method: "DELETE"
