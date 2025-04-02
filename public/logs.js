@@ -190,8 +190,9 @@ function render_tasks(tasks) {
             const total = dateTasks
                 .filter(task => task.matter_number === matter_number)
                 .reduce((sum, task) => sum + parseFloat(task.time_billed), 0);
-
+            console.log("total:", total);
             const formatted = formatTimeBilled(total);
+            console.log("formatted:", formatted);
             const viewElement = document.getElementById(`matter-${matter_number}-total-time-billed-view`);
             const editElement = document.getElementById(`matter-${matter_number}-total-time-billed-edit`);
 
