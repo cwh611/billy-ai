@@ -291,23 +291,18 @@ function render_tasks(tasks) {
                         }).then(res => res.json())
                         : Promise.resolve()
                 ])
-                .then(() => {
-                    // Update the view mode content without re-rendering everything
-                    const matterNumber = container.querySelector(".matter-number")?.textContent.match(/\(([^)]+)\)/)?.[1];
-                    if (matterNumber) {
-                        const total = updates.reduce((sum, task) => sum + parseFloat(task.time_billed), 0);
-                        const formatted = formatTimeBilled(total);
-                        const viewElement = document.getElementById(`matter-${matterNumber}-total-time-billed-view`);
-                        const editElement = document.getElementById(`matter-${matterNumber}-total-time-billed-edit`);
-                        if (viewElement) viewElement.textContent = formatted;
-                        if (editElement) editElement.textContent = formatted;
-                    }
-                    
-                    viewMode.style.display = "flex";
-                    editMode.style.display = "none";
-                    btn.textContent = "Edit";
+                .then(() => fetch(`${app_url}/fetch-task-logs`))
+                .then(res => res.json())
+                .then(freshData => {
+                    render_tasks(freshData);
+                    // Ensure button text is set to Edit after re-render
+                    const newBtn = document.querySelector(`.edit-save-summary-btn[data-date="${date}"][data-index="${index}"]`);
+                    if (newBtn) newBtn.textContent = "Edit";
                 })
                 .catch(err => console.error("Update error:", err));
+
+                viewMode.style.display = "flex";
+                editMode.style.display = "none";
             } else {
                 viewMode.style.display = "none";
                 editMode.style.display = "flex";
