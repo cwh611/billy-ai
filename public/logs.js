@@ -62,7 +62,9 @@ function render_tasks(tasks) {
     sortedDates.forEach(date => {
         const dateHeader = document.createElement("div");
         dateHeader.className = "daily-log-summaries-container-header";
-        dateHeader.textContent = date.toLocaleDateString('en-US', {
+
+        const dateObj = new Date(date);
+        dateHeader.textContent = dateObj.toLocaleDateString('en-US', {
             timeZone: 'America/Los_Angeles',
             weekday: 'long',
             year: 'numeric',
