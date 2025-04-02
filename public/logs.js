@@ -59,7 +59,7 @@ function render_tasks(tasks) {
         const dateHeader = document.createElement("div");
         dateHeader.className = "daily-log-summaries-container-header";
         const localDate = new Date(date);
-        dateHeader.textContent = localDate.toISOString('en-US', { 
+        dateHeader.textContent = localDate.toLocaleDateString('en-CA', { 
             weekday: 'long', 
             year: 'numeric', 
             month: 'long', 
