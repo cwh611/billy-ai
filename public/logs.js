@@ -61,17 +61,19 @@ function render_tasks(tasks) {
     console.log("sortedDates:", sortedDates);
 
     sortedDates.forEach(date => {
+        const [year, month, day] = date.split("-");
         const dateHeader = document.createElement("div");
         dateHeader.className = "daily-log-summaries-container-header";
-
-        const dateObj = new Date(date);
-        dateHeader.textContent = dateObj.toLocaleDateString('en-US', {
+        
+        const displayDate = new Date(`${year}-${month}-${day}T00:00:00`);
+        dateHeader.textContent = displayDate.toLocaleDateString('en-US', {
             timeZone: 'America/Los_Angeles',
             weekday: 'long',
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
+        
         mainContainer.appendChild(dateHeader);
 
         const dateContainer = document.createElement("div");
