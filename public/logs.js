@@ -196,8 +196,8 @@ function render_tasks(tasks) {
             const viewElement = document.getElementById(`matter-${matter_number}-total-time-billed-view`);
             const editElement = document.getElementById(`matter-${matter_number}-total-time-billed-edit`);
 
-            if (viewElement) viewElement.innerText = formatted;
-            if (editElement) editElement.innerText = formatted;
+            if (viewElement) viewElement.textContent = formatted;
+            if (editElement) editElement.textContent = formatted;
         });
     });
 
@@ -298,11 +298,11 @@ function render_tasks(tasks) {
 
                 viewMode.style.display = "flex";
                 editMode.style.display = "none";
-                btn.innerText = "Edit";
+                btn.textContent = "Edit";
             } else {
                 viewMode.style.display = "none";
                 editMode.style.display = "flex";
-                btn.innerText = "Save";
+                btn.textContent = "Save";
             }
         });
     });
