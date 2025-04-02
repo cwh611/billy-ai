@@ -291,14 +291,23 @@ function render_tasks(tasks) {
                         }).then(res => res.json())
                         : Promise.resolve()
                 ])
-                .then(() => fetch(`${app_url}/fetch-task-logs`))
-                .then(res => res.json())
-                .then(freshData => render_tasks(freshData))
+                .then(() => {
+                    // Update the view mode content without re-rendering everything
+                    const matterNumber = container.querySelector(".matter-number")?.textContent.match(/\(([^)]+)\)/)?.[1];
+                    if (matterNumber) {
+                        const total = updates.reduce((sum, task) => sum + parseFloat(task.time_billed), 0);
+                        const formatted = formatTimeBilled(total);
+                        const viewElement = document.getElementById(`matter-${matterNumber}-total-time-billed-view`);
+                        const editElement = document.getElementById(`matter-${matterNumber}-total-time-billed-edit`);
+                        if (viewElement) viewElement.textContent = formatted;
+                        if (editElement) editElement.textContent = formatted;
+                    }
+                    
+                    viewMode.style.display = "flex";
+                    editMode.style.display = "none";
+                    btn.textContent = "Edit";
+                })
                 .catch(err => console.error("Update error:", err));
-
-                viewMode.style.display = "flex";
-                editMode.style.display = "none";
-                btn.textContent = "Edit";
             } else {
                 viewMode.style.display = "none";
                 editMode.style.display = "flex";
