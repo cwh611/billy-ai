@@ -36,10 +36,6 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function render_tasks(tasks) {
-    function parseDateFromYMD(dateStr) {
-        const [year, month, day] = dateStr.split('-');
-        return new Date(Date.UTC(year, month - 1, day));
-    }
 
     function formatTimeBilled(minutesFloat) {
         const hours = Math.floor(minutesFloat / 60);
@@ -61,11 +57,12 @@ function render_tasks(tasks) {
 
     const sortedDates = Object.keys(tasksByDate).sort((a, b) => b.localeCompare(a));
 
+    console.log("sortedDates:", sortedDates);
+
     sortedDates.forEach(date => {
         const dateHeader = document.createElement("div");
         dateHeader.className = "daily-log-summaries-container-header";
-        const localDate = parseDateFromYMD(date);
-        dateHeader.textContent = localDate.toLocaleDateString('en-US', {
+        dateHeader.textContent = date.toLocaleDateString('en-US', {
             timeZone: 'America/Los_Angeles',
             weekday: 'long',
             year: 'numeric',
@@ -79,6 +76,8 @@ function render_tasks(tasks) {
 
         const matter_numbers_rendered = [];
         const dateTasks = tasksByDate[date];
+
+        console.log("dateTasks:", dateTasks);
 
         dateTasks.forEach((task, index) => {
             if (!matter_numbers_rendered.includes(task.matter_number)) {
