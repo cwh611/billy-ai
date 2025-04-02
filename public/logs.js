@@ -60,10 +60,11 @@ function render_tasks(tasks) {
         dateHeader.className = "daily-log-summaries-container-header";
         const localDate = new Date(date);
         dateHeader.textContent = localDate.toLocaleDateString('en-CA', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric'
+          timeZone: 'America/Los_Angeles', 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric'
         });
         mainContainer.appendChild(dateHeader);
 
