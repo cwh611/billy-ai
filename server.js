@@ -139,7 +139,7 @@ app.get('/fetch-todays-task-logs', async (req, res) => {
       WHERE date = $1
     `;
     
-    const result = await client.query(query);
+    const result = await client.query(query, [today]);
     client.release();
     
     const summaries = result.rows.map(row => ({
