@@ -53,21 +53,23 @@ function render_tasks(tasks) {
     // Sort dates in descending order (most recent first)
     const sortedDates = Object.keys(tasksByDate).sort((a, b) => b.localeCompare(a));
 
-    // Create a container for each date
+    // Create containers for each date
     sortedDates.forEach(date => {
-        const dateContainer = document.createElement("div");
-        dateContainer.className = "daily-log-summaries-container";
-        
-        // Add date header
+        // Create and add the date header
         const dateHeader = document.createElement("div");
         dateHeader.className = "daily-log-summaries-container-header";
-        dateHeader.textContent = new Date(date).toLocaleDateString('en-US', { 
+        const localDate = new Date(date);
+        dateHeader.textContent = localDate.toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
             month: 'long', 
-            day: 'numeric' 
+            day: 'numeric'
         });
-        dateContainer.appendChild(dateHeader);
+        mainContainer.appendChild(dateHeader);
+
+        // Create the container for the day's tasks
+        const dateContainer = document.createElement("div");
+        dateContainer.className = "daily-log-summaries-container";
 
         const matter_numbers_rendered = [];
         const dateTasks = tasksByDate[date];

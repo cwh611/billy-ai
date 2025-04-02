@@ -29,3 +29,6 @@ BillyAI/*.xcodeproj/project.xcworkspace/
 BillyAI/*.xcodeproj/xcuserdata/
 BillyAI/*.xcodeproj/*.xcuserstate
 BillyAI/*.xcodeproj/*.pbxuser
+
+/testing_docs
+/activity_logs.json

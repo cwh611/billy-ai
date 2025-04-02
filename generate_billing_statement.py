@@ -42,7 +42,7 @@ def send_prompt_to_gpt(prompt, model="gpt-4o", max_tokens=1000):
                     "for each discrete task worked on. Your response MUST be a valid JSON array. "
                     "Each task object should contain: client_number, matter_number, "
                     "task_descr (concise text description of the task in professional legal billing language), "
-                    "time_billed (in minutes, one decimal place), and date."
+                    "time_billed (in minutes, one decimal place), and date (that the task was worked on)."
                 )
             },
             {
