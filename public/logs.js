@@ -46,7 +46,8 @@ function render_tasks(tasks) {
     }
 
     const tasksByDate = tasks.reduce((acc, task) => {
-        const date = task.date || new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+        const rawDate = task.date || new Date().toISOString();
+        const date = rawDate.slice(0, 10); // 'YYYY-MM-DD'
         if (!acc[date]) acc[date] = [];
         acc[date].push(task);
         return acc;
