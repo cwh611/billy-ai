@@ -133,6 +133,7 @@ app.get('/fetch-todays-task-logs', async (req, res) => {
     const client = await pool.connect();
     
     const today = new Date().toISOString().slice(0, 10);
+    console.log("today:", today);
     const query = `
       SELECT id, task_descr, client_number, matter_number, time_billed, date
       FROM tasks
